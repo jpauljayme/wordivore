@@ -1,0 +1,14 @@
+package dev.jp.emancipate_the_self.dto;
+
+import java.util.List;
+
+public record BookDto(
+        List<String> authors,
+        int publicationDate,
+        String title,
+        List<String> subjects,
+        List<String> publishers,
+        int pages,
+        List<String> isbn10
+) {
+}
