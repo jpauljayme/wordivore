@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    @GetMapping("/user")
+    @GetMapping("/test")
     public UserDetails getUser(@RequestParam String username){
         return null;
     }

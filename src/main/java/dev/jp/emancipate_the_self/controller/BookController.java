@@ -36,4 +36,9 @@ public class BookController {
         return "hello";
     }
 
+    @GetMapping("/user")
+    public String user(Model model){ return "index";}
+
+    @GetMapping("/admin")
+    public String admin(Model model){ return "console";}
 }
