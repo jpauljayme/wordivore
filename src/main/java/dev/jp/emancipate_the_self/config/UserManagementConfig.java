@@ -13,11 +13,6 @@ import javax.sql.DataSource;
     public class UserManagementConfig {
 
         @Bean
-        UserDetailsService userDetailsService(DataSource dataSource){
-            return new JdbcUserDetailsManager(dataSource);
-        }
-
-        @Bean
         PasswordEncoder passwordEncoder(){
             return PasswordEncoderFactories.createDelegatingPasswordEncoder();
         }

@@ -78,6 +78,16 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<artifactId>webjars-locator-core</artifactId>
+			<groupId>org.webjars</groupId>
+		</dependency>
+		<dependency>
+			<artifactId>htmx.org</artifactId>
+			<groupId>org.webjars.npm</groupId>
+			<version>2.0.6</version>
+		</dependency>
 	</dependencies>
 
 	<build>

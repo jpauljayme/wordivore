@@ -3,19 +3,25 @@ package dev.jp.emancipate_the_self.model;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class SecurityUser implements UserDetails {
 
-    private final User user;
+    private final AppUser user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of( () -> user.getRoles());
+
+        return Arrays.stream(user
+                .getRoles()
+                .split(","))
+                .map(SimpleGrantedAuthority::new)
+                .toList();
     }
 
     @Override
@@ -45,6 +51,6 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
     }
 }

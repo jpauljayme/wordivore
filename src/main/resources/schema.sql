@@ -1,14 +1,12 @@
---CREATE TYPE IF NOT EXISTS AS ENUM ('M', 'F');
---
---CREATE TYPE role IF NOT EXISTS ENUM ('ROLE_ADMIN', 'ROLE_USER');
-
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(45) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL,
     enabled BOOLEAN NOT NULL,
+    roles VARCHAR(20) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
     age INTEGER NOT NULL,
-    sex sex_type,
+    gender VARCHAR(20),
     bio TEXT
 );
 

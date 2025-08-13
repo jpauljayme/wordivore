@@ -1,0 +1,8 @@
+<header th:fragment="header">
+  <h1>Emancipate Self</h1>
+  <button>Login</button>
+  <button>Sign Up</button>
+  <button sec:authorize="isAuthenticated()" hx-post="/logout" hx-target="body" hx-swap="outerHTML">Log out</button>
+</header>
+</body>
+</html>
