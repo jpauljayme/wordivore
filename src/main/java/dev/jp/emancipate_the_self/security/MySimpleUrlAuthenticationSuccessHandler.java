@@ -57,7 +57,6 @@ public class MySimpleUrlAuthenticationSuccessHandler implements org.springframew
         roleToTargetUrl.put("ROLE_ADMIN", "/admin");
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        log.info(authorities.toString());
         for (final GrantedAuthority grantedAuthority : authorities){
             String authorityName= grantedAuthority.getAuthority();
             if(roleToTargetUrl.containsKey(authorityName)){

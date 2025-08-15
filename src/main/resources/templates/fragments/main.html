@@ -2,10 +2,18 @@
   <div th:text="${'@' + username}">
   </div>
   <h2>Library</h2>
-  <label for="searchIsbn">
-    <input type="text" placeholder="Input isbn" name="searchIsbn" id="searchIsbn"/>
-  </label>
-  <div th:unless="${books.isEmpty}">
+  <form th:action="@{/books/isbn}" method="post">
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}"
+    />
+    <label for="searchIsbn">
+      <input type="text" placeholder="Isbn..." name="isbn" id="searchIsbn"/>
+    </label>
+    <input type="submit" value="Search">
+  </form>
+
+  <div th:if="${not #lists.isEmpty(books)}">
     <ul th:each="book : ${books}">
       <li th:text="${book.title}"></li>
     </ul>

@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS book (
-    id BIGSERIAL PRIMARY KEY,
-    authors VARCHAR(100) NOT NULL,
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    authors TEXT[] DEFAULT '{}'::TEXT[],
     publication_date INTEGER NOT NULL,
     title VARCHAR(200) NOT NULL,
     subjects TEXT[] DEFAULT '{}'::TEXT[],

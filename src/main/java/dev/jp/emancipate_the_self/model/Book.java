@@ -5,10 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 @Entity
 @Table(name = "book")
 @Getter
@@ -45,7 +41,6 @@ public class Book extends PersistedEntity {
     private String[] isbn10;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",
-    referencedColumnName = "id")
+    @JoinColumn(name = "user_id")
     private AppUser appUser;
 }

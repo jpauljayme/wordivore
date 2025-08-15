@@ -21,7 +21,8 @@ public class BookService {
     private final AppUserRepository appUserRepository;
 
     public List<Book> getUserLibrary(Long id){
-        return bookRepository.findAllByAppUserId(id);
+         List<Book> books = bookRepository.findAllByAppUser_Id(id);
+         return books;
     }
 
     public void insertBook(BookDto bookDto, Long userId) {

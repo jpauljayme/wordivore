@@ -9,12 +9,14 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class BookController {
 
@@ -29,12 +31,13 @@ public class BookController {
         return result;
     }
 
-    @GetMapping("books/isbn")
-    public ResponseEntity<BookDto> SearchBookByIsbn(@RequestParam String isbn,
-                                                    @AuthenticationPrincipal SecurityUser securityUser
-                                                    ) throws BookNotFoundException {
+    @PostMapping("books/isbn")
+    public String SearchBookByIsbn(Model model,
+                                   @RequestParam String isbn,
+                                   @AuthenticationPrincipal SecurityUser securityUser
+    ) throws BookNotFoundException {
         BookDto bookDto = openLibraryService.searchByIsbn(isbn).orElse(null);
         bookService.insertBook(bookDto, securityUser.getUserId());
-        return ResponseEntity.ok().body(bookDto);
+        return "index";
     }
 }

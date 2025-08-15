@@ -18,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final BookService bookService;
+
     @GetMapping("/user")
     public String getUser(Model model, @AuthenticationPrincipal SecurityUser securityUser){
-        model.addAttribute("username",securityUser.getUsername());
+        model.addAttribute("username", securityUser.getUsername());
         model.addAttribute("books",  bookService.getUserLibrary(securityUser.getUserId()));
         return "index";
     }
