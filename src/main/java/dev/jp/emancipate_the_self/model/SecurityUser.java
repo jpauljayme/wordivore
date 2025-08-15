@@ -1,6 +1,8 @@
 package dev.jp.emancipate_the_self.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -24,6 +26,7 @@ public class SecurityUser implements UserDetails {
                 .toList();
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return user.getPassword();
@@ -53,4 +56,13 @@ public class SecurityUser implements UserDetails {
     public boolean isEnabled() {
         return user.isEnabled();
     }
+
+    public Long getUserId(){
+        return user.id;
+    }
+
+    public AppUser getAppUser(){
+        return user;
+    }
+
 }

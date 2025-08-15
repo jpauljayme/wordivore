@@ -65,7 +65,6 @@ public class OpenLibraryService {
                     first.publicationDate(),
                     first.title(),
                     booksApiResponse != null ? booksApiResponse.subjects() : Collections.emptyList(),
-                    booksApiResponse != null ? booksApiResponse.publishers() : Collections.emptyList(),
                     booksApiResponse != null ? booksApiResponse.pages() : 0,
                     booksApiResponse != null ? booksApiResponse.isbn10() : Collections.emptyList()
             ));

@@ -5,7 +5,9 @@
   <label for="searchIsbn">
     <input type="text" placeholder="Input isbn" name="searchIsbn" id="searchIsbn"/>
   </label>
-  <p>Book 1</p>
-  <p>Book 2</p>
-  <p>Book 3</p>
+  <div th:unless="${books.isEmpty}">
+    <ul th:each="book : ${books}">
+      <li th:text="${book.title}"></li>
+    </ul>
+  </div>
 </div>

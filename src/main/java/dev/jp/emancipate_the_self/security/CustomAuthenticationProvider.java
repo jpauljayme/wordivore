@@ -38,11 +38,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         if(passwordEncoder.matches(password, u.getPassword())){
-            return new UsernamePasswordAuthenticationToken(
-                    username,
-                    password,
-                    u.getAuthorities()
-            );
+           UsernamePasswordAuthenticationToken result = UsernamePasswordAuthenticationToken.authenticated(
+                   u,
+                   null,
+                   u.getAuthorities());
+
+           result.setDetails(authentication.getDetails());
+
+           return result;
         }else {
             throw new BadCredentialsException("Credentials incorrect.");
         }
@@ -64,7 +67,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      * authentication is conducted at runtime the <code>ProviderManager</code>.
      * </p>
      *
-     * @param authentication
+     * @param authenticationType
      * @return <code>true</code> if the implementation can more closely evaluate the
      * <code>Authentication</code> class presented
      */

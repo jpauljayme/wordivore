@@ -16,7 +16,7 @@ public class RestClientConfig {
         return RestClient.builder()
                 .baseUrl("https://openlibrary.org")
                 .defaultHeader("Accept", "application/json")
-                .defaultHeader("User-Agent", "emancipate-the-self")
+                .defaultHeader("User-Agent", "emancipate-the-self (jpaul.jayme@gmail.com)")
                 .requestInterceptor(new ClientLoggerRequestInterceptor())
                 .build();
     }

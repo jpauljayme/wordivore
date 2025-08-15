@@ -7,7 +7,6 @@ public record BookDto(
         int publicationDate,
         String title,
         List<String> subjects,
-        List<String> publishers,
         int pages,
         List<String> isbn10
 ) {

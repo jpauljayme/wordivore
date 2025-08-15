@@ -1,7 +1,6 @@
 package dev.jp.emancipate_the_self.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -11,9 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class AppUser {
-    @Id
-    private int id;
+public class AppUser extends PersistedEntity{
     private String username;
     private String password;
     private boolean enabled;
