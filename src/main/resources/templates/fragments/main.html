@@ -1,11 +1,17 @@
-<div th:fragment="main">
-  <div th:text="${'@' + username}">
-  </div>
-  <h2>Library</h2>
-  <label for="searchIsbn">
-    <input type="text" placeholder="Input isbn" name="searchIsbn" id="searchIsbn"/>
+<main th:fragment="main" id="main">
+  <label th:text="${'@' + username}">
   </label>
-  <p>Book 1</p>
-  <p>Book 2</p>
-  <p>Book 3</p>
-</div>
+
+
+  <div id="userLibrary" >
+    <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
+    <div th:replace="~{fragments/main :: userLibrary(books=${books})}">
+    </div>
+  </div>
+
+</main>
+
+
+<ul th:if="${not #lists.isEmpty(books)}" th:fragment="userLibrary(books)">
+    <li th:each="b : ${books}" th:text="${b.title}"></li>
+</ul>

@@ -1,0 +1,41 @@
+.authenticatedHeader, .landingHeader {
+    grid-area: header;
+    display: grid;
+    align-items: center;
+}
+
+.authenticatedHeader {
+    grid-template-columns: 0.5fr 1fr max-content;
+    gap: 10px;
+}
+
+.landingHeader {
+     grid-template-columns: 1fr 1fr;
+}
+
+.authenticatedHeader--img-wrapper__img, .landingHeader--img-wrapper__img {
+    width: 50px;
+}
+
+.authenticatedHeader--logout, .landingHeader--signin {
+    text-align: end;
+    height: 50px;
+}
+
+.loginHeader--img-wrapper {
+    display:flex;
+    justify-content: center;
+}
+
+.loginHeader--img-wrapper__img {
+    width: 40%;
+}
+
+.label-font {
+    font-family: atkinsonHyperlegibleNextLight;
+    font-size: 12px;
+}
+
+.authenticatedHeader--form__inputIsbn{
+    height: 50px;
+}

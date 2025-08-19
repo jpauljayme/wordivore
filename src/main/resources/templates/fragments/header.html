@@ -1,8 +1,68 @@
-<header th:fragment="header">
-  <h1>Emancipate Self</h1>
-  <button>Login</button>
-  <button>Sign Up</button>
-  <button sec:authorize="isAuthenticated()" hx-post="/logout" hx-target="body" hx-swap="outerHTML">Log out</button>
+<header th:fragment="landingHeader"
+        class="landingHeader"
+>
+  <div class="landingHeader--img-wrapper">
+    <img class="landingHeader--img-wrapper__img"
+         th:src="@{/images/wordivore.png}"
+     alt="Brand logo of Wordivore"
+    >
+  </div>
+  <ul class="landingHeader--signin">
+    <li hx-get="/login"
+        hx-target=".wrapper"
+        hx-swap="innerHTML"
+        hx-push-url="/login"
+        class="label-font"
+    >Sign In
+    </li>
+  </ul>
 </header>
-</body>
-</html>
+
+<header th:fragment="loginHeader" class="loginHeader">
+  <div class="loginHeader--img-wrapper">
+   <img class="loginHeader--img-wrapper__img"
+        th:src="@{/images/wordivore.png}"
+   >
+  </div>
+</header>
+
+<header th:fragment="authenticatedHeader" class="authenticatedHeader">
+  <div class="authenticatedHeader--img-wrapper">
+    <img class="authenticatedHeader--img-wrapper__img"
+         th:src="@{/images/wordivore.png}"
+    >
+  </div>
+
+  <form th:action="@{/books/isbn}"
+        method="post"
+        th:attr="hx-post=@{/books/isbn}"
+        hx-target="#userLibrary"
+        hx-swap="innerHTML"
+        class="authenticatedHeader--form"
+  >
+
+    <input type="hidden"
+           th:name="${_csrf.parameterName}"
+           th:value="${_csrf.token}"
+    />
+
+    <input type="text"
+             placeholder="Input isbn"
+             name="isbn"
+             id="searchIsbn"
+             class="authenticatedHeader--form__inputIsbn"
+    />
+
+    <input type="submit" hidden>
+  </form>
+
+  <div class="authenticatedHeader--logout">
+    <button sec:authorize="isAuthenticated()"
+            hx-get="/logout"
+            hx-target=".wrapper"
+            hx-swap="innerHTML"
+            class="authenticatedHeader--logout__btn"
+    >Sign out
+    </button>
+  </div>
+</header>

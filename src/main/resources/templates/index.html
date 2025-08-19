@@ -10,8 +10,10 @@
     <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
-    <title>Emancipate The Self</title>
+    <title>Wordivore</title>
     <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/header.css}">
+    <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
     <script>
         document.addEventListener("htmx:configRequest", (e) => {
             const token = document.querySelector('meta[name=_csrf]').content;
@@ -20,16 +22,20 @@
         });
     </script>
 </head>
-<body>
+<body >
     <div class="wrapper">
-        <div th:replace="~{fragments/header :: header}"></div>
+        <div sec:authorize="isAuthenticated()"
+                th:replace="~{fragments/header :: authenticatedHeader}"></div>
+
+        <div sec:authorize="isAnonymous()"
+             th:replace="~{fragments/header :: landingHeader}"></div>
 
         <main sec:authorize="isAnonymous()"
             th:replace="~{fragments/landing :: landing}"
         ></main>
-        <main sec:authorize="isAuthenticated()"
+        <div sec:authorize="isAuthenticated()"
             th:replace="~{fragments/main :: main}"
-        ></main>
+        ></div>
 
         <div th:replace="~{fragments/footer :: footer}"></div>
 
