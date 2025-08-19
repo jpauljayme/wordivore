@@ -1,21 +1,17 @@
-<div th:fragment="main">
-  <div th:text="${'@' + username}">
-  </div>
-  <h2>Library</h2>
-  <form th:action="@{/books/isbn}" method="post">
-    <input type="hidden"
-           th:name="${_csrf.parameterName}"
-           th:value="${_csrf.token}"
-    />
-    <label for="searchIsbn">
-      <input type="text" placeholder="Isbn..." name="isbn" id="searchIsbn"/>
-    </label>
-    <input type="submit" value="Search">
-  </form>
+<main th:fragment="main" id="main">
+  <label th:text="${'@' + username}">
+  </label>
 
-  <div th:if="${not #lists.isEmpty(books)}">
-    <ul th:each="book : ${books}">
-      <li th:text="${book.title}"></li>
-    </ul>
+
+  <div id="userLibrary" >
+    <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
+    <div th:replace="~{fragments/main :: userLibrary(books=${books})}">
+    </div>
   </div>
-</div>
+
+</main>
+
+
+<ul th:if="${not #lists.isEmpty(books)}" th:fragment="userLibrary(books)">
+    <li th:each="b : ${books}" th:text="${b.title}"></li>
+</ul>

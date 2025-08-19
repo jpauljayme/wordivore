@@ -1,10 +1,104 @@
+@font-face {
+    font-family: atkinsonHyperlegibleNextRegular;
+    src: url("/fonts/AtkinsonHyperlegibleNext-Regular.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: atkinsonHyperlegibleNextLight;
+    src: url("/fonts/AtkinsonHyperlegibleNext-Light.woff2") format("woff2");
+}
+
+@font-face {
+    font-family: atkinsonHyperlegibleNextBold;
+    src: url("/fonts/AtkinsonHyperlegibleNext-Bold.woff2") format("woff2");
+}
+
 * {
 padding: 0;
 margin: 0;
 }
 
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+button {
+    font-family: atkinsonHyperlegibleNextLight;
+    font-size: 12px;
+    padding: 2px;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: #F5F5DC;
+    font-family: atkinsonHyperlegibleNextRegular, sans-serif;
+}
+
+input{
+    box-sizing: border-box;
+    outline: none;
+    padding: 2px;
+    font-size: 0.6rem;
+}
+
+input:focus{
+    border: 2px solid rgb(177, 43, 36);
+}
+
 .wrapper {
+    min-height: 100svh;
+    display: grid;
+    grid-template-areas:
+    "header"
+    "main"
+    "footer";
+    grid-template-rows: min-content auto auto;
+}
+
+
+#main, main, .login-block {
+    grid-area: main;
+    display: grid;
+    place-items: center;
+}
+
+footer, .footer {
+    grid-area: footer;
+    font-family: atkinsonHyperlegibleNextLight;
+    font-size: 10px;
+}
+
+.login--form {
+    display: grid;
+    gap: 10px;
+}
+
+.login--submit {
+    justify-self: center;
+    width: 30%;
+}
+
+
+@media only screen and (min-width: 992px) {
+}
+
+.landing {
+    display: grid;
+    place-content: center;
     text-align: center;
-    padding: 25px;
-    background-color: wheat;
+    gap: 10px;
+}
+
+.landing__signup-btn{
+    width: 60px;
+    margin: 0 auto;
+}
+
+.text-muted{
+    color: gray;
 }

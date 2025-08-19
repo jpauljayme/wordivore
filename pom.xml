@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>dev.jp</groupId>
-	<artifactId>emancipate-the-self</artifactId>
+	<artifactId>wordivore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>emancipate_the-self</name>
+	<name>wordivore</name>
 	<description>Ticking of the time, words march onwards, and I am the bell</description>
 	<url/>
 	<licenses>
