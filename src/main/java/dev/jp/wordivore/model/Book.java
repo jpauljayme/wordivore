@@ -43,4 +43,7 @@ public class Book extends PersistedEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private AppUser appUser;
+
+    @Column(name = "cover_url")
+    private String coverUrl;
 }

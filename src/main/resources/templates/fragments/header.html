@@ -58,9 +58,10 @@
 
   <div class="authenticatedHeader--logout">
     <button sec:authorize="isAuthenticated()"
-            hx-get="/logout"
+            hx-post="/logout"
             hx-target=".wrapper"
             hx-swap="innerHTML"
+            hx-push-url="/"
             class="authenticatedHeader--logout__btn"
     >Sign out
     </button>

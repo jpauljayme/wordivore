@@ -8,6 +8,7 @@ public record BookDto(
         String title,
         List<String> subjects,
         int pages,
-        List<String> isbn10
+        List<String> isbn10,
+        String coverUrl
 ) {
 }

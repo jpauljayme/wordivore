@@ -12,6 +12,14 @@
 </main>
 
 
-<ul th:if="${not #lists.isEmpty(books)}" th:fragment="userLibrary(books)">
-    <li th:each="b : ${books}" th:text="${b.title}"></li>
-</ul>
+<div th:if="${not #lists.isEmpty(books)}"
+     th:fragment="userLibrary(books)">
+    <ul>
+      <li class="glide__slide"
+          th:each="b : ${books}"
+      >
+<!--        <img th:src="${b.coverUrl + '-M.jpg'}">-->
+        <span th:text="${b.title}"></span>
+      </li>
+    </ul>
+</div>

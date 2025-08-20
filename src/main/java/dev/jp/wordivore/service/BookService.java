@@ -22,8 +22,7 @@ public class BookService {
     private final AppUserRepository appUserRepository;
 
     public List<Book> getUserLibrary(Long id){
-         List<Book> books = bookRepository.findAllByAppUser_Id(id);
-         return books;
+         return bookRepository.findAllByAppUser_Id(id);
     }
 
     public void insertBook(BookDto bookDto, String isbn, Long userId) throws BookDuplicateIsbnException {

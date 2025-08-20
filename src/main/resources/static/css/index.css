@@ -28,6 +28,8 @@ button {
     font-family: atkinsonHyperlegibleNextLight;
     font-size: 12px;
     padding: 2px;
+    background-color: rgb(177, 43, 36);
+    color: white;
 }
 
 html, body {
