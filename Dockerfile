@@ -2,23 +2,25 @@ FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 WORKDIR /app
 
+# Cache deps
 COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-RUN ./mvnw dependency:go-offline -B
+RUN mvn -q -DskipTests dependency:go-offline
 
-# Copy application source
+# Build
 COPY src ./src
+RUN mvn -q -DskipTests package
 
-# Build the application
-RUN ./mvnw clean package -DskipTests
+# Runtime stage
+FROM eclipse-temurin:21-jre-jammy
+# create non-root user
+RUN useradd --system --create-home --shell /usr/sbin/nologin appuser
+USER appuser
+WORKDIR /home/appuser
 
-FROM eclipse-temurin:21-jre-alpine
 
-WORKDIR /app
-
+# copy fat jar (adjust name if you don't use -SNAPSHOT)
 COPY --from=build /app/target/*-SNAPSHOT.jar app.jar
 
-EXPOSE 8081
+EXPOSE 8080
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","/home/appuser/app.jar"]
