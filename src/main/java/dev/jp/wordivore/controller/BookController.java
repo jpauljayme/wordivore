@@ -9,9 +9,11 @@ import dev.jp.wordivore.service.OpenLibraryService;
 import dev.jp.wordivore.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,6 +29,8 @@ public class BookController {
     private final BookService bookService;
     private final S3Service s3Service;
 
+    @Value("${CLOUDFRONT_URL}")
+    private String prefix;
 
     @PostMapping("books/isbn")
     public String SearchBookByIsbn(Model model,
@@ -36,12 +40,21 @@ public class BookController {
         BookDto bookDto = openLibraryService.searchByIsbn(isbn).orElse(null);
 
         if(Objects.nonNull(bookDto)){
-//            bookService.insertBook(bookDto, isbn, securityUser.getUserId());
-//            s3Service.listFolders();
+            bookService.insertBook(bookDto, isbn, securityUser.getUserId());
             s3Service.uploadCover(isbn, bookDto.coverUrl());
         }
 
         model.addAttribute("books", bookService.getUserLibrary(securityUser.getUserId()));
-        return "fragments/main :: userLibrary";
+        model.addAttribute("prefix", prefix);
+        return "redirect:/user";
+    }
+
+    @GetMapping("/books/all")
+    public String viewAllBooks(Model model, @AuthenticationPrincipal SecurityUser securityUser){
+        model.addAttribute("username", securityUser.getUsername());
+        model.addAttribute("books", bookService.getUserLibrary(securityUser.getUserId()));
+        model.addAttribute("prefix", prefix);
+
+        return "fragments/main :: viewAll";
     }
 }

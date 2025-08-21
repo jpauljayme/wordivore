@@ -1,25 +1,42 @@
-<main th:fragment="main" id="main">
-  <label th:text="${'@' + username}">
-  </label>
+<main th:fragment="userLibraryLanding" id="main">
+  <div>
+    <span th:text="${'@' + username}"></span>
+  </div>
 
-
-  <div id="userLibrary" >
+  <div id="userLibraryLanding">
     <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
-    <div th:replace="~{fragments/main :: userLibrary(books=${books})}">
+    <div th:replace="~{fragments/main :: list(books=${books})}">
     </div>
   </div>
 
+    <button th:attr="hx-get=@{/books/all}"
+           hx-push-url="true"
+            hx-target="#main"
+    >
+        View all
+    </button>
 </main>
 
 
 <div th:if="${not #lists.isEmpty(books)}"
-     th:fragment="userLibrary(books)">
-    <ul>
-      <li class="glide__slide"
-          th:each="b : ${books}"
-      >
-<!--        <img th:src="${b.coverUrl + '-M.jpg'}">-->
-        <span th:text="${b.title}"></span>
-      </li>
-    </ul>
+     th:each="b : ${books}"
+     th:fragment="list(books)">
+
+    <a href="#">
+        <img th:src="${prefix + b.isbn10 + '-M.jpg'}">
+    </a>
 </div>
+
+
+
+<main th:fragment="viewAll" id="viewAll">
+    <div>
+        <span th:text="${'@' + username}"></span>
+    </div>
+
+    <div id="userLibraryViewAll">
+        <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
+        <div th:replace="~{fragments/main :: list(books=${books})}">
+        </div>
+    </div>
+</main>

@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
 import java.net.URI;
@@ -67,7 +68,7 @@ public class OpenLibraryService {
                 first.title(),
                 booksApiResponse != null ? booksApiResponse.subjects() : Collections.emptyList(),
                 booksApiResponse != null ? booksApiResponse.pages() : 0,
-                booksApiResponse != null ? booksApiResponse.isbn10() : Collections.emptyList(),
+                booksApiResponse != null ? booksApiResponse.isbn10().getFirst() : "",
                 coverUrl
         ));
     }

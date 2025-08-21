@@ -14,9 +14,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("select b from Book b where b.appUser.id = :id")
     List<Book> findAllByAppUser_Id(Long id);
 
-    @Query(value = "SELECT exists (SELECT 1 FROM book " +
-            "WHERE :isbn = ANY (isbn_10))",
-            nativeQuery = true
-    )
     boolean existsByIsbn10(@Param("isbn") String isbn);
+
+    List<Book> findTop4ByAppUser_IdOrderByCreatedAtDesc(Long id);
 }

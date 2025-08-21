@@ -25,15 +25,16 @@ public class BookService {
          return bookRepository.findAllByAppUser_Id(id);
     }
 
+    public List<Book> getUserLibraryMostRecent(Long id){
+        return bookRepository.findTop4ByAppUser_IdOrderByCreatedAtDesc(id);
+    }
+
     public void insertBook(BookDto bookDto, String isbn, Long userId) throws BookDuplicateIsbnException {
         if(bookRepository.existsByIsbn10(isbn)){
             throw new BookDuplicateIsbnException();
         }
 
         Book book = bookMapper.toEntity(bookDto);
-        if(CollectionUtils.isEmpty(bookDto.isbn10())){
-            book.setIsbn10(new String[]{isbn});
-        }
 
         book.setAppUser(appUserRepository.getReferenceById(userId));
         bookRepository.save(book);

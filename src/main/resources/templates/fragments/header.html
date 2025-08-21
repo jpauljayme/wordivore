@@ -9,7 +9,7 @@
   </div>
   <ul class="landingHeader--signin">
     <li hx-get="/login"
-        hx-target=".wrapper"
+        hx-target="main"
         hx-swap="innerHTML"
         hx-push-url="/login"
         class="label-font"
@@ -33,12 +33,10 @@
     >
   </div>
 
-  <form th:action="@{/books/isbn}"
+  <form class="authenticatedHeader--form"
+        th:action="@{/books/isbn}"
         method="post"
         th:attr="hx-post=@{/books/isbn}"
-        hx-target="#userLibrary"
-        hx-swap="innerHTML"
-        class="authenticatedHeader--form"
   >
 
     <input type="hidden"

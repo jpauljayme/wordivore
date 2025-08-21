@@ -43,11 +43,10 @@
             th:replace="~{fragments/landing :: landing}"
         ></main>
         <div sec:authorize="isAuthenticated()"
-            th:replace="~{fragments/main :: main}"
+            th:replace="~{fragments/main :: userLibraryLanding}"
         ></div>
 
         <div th:replace="~{fragments/footer :: footer}"></div>
-
     </div>
 </body>
 
