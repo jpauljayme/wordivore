@@ -82,6 +82,8 @@ footer, .footer {
     grid-area: footer;
     font-family: atkinsonHyperlegibleNextLight;
     font-size: 10px;
+    display: grid:
+    align-items: end;
 }
 
 .login--form {
