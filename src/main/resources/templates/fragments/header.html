@@ -2,16 +2,18 @@
         class="landingHeader"
 >
   <div class="landingHeader--img-wrapper">
-    <img class="landingHeader--img-wrapper__img"
-         th:src="@{/images/wordivore.png}"
-     alt="Brand logo of Wordivore"
-    >
+    <a href="/">
+      <img class="landingHeader--img-wrapper__img"
+           th:src="@{/images/wordivore.png}"
+           alt="Brand logo of Wordivore"
+      >
+    </a>
   </div>
   <ul class="landingHeader--signin">
     <li hx-get="/login"
-        hx-target="main"
-        hx-swap="innerHTML"
-        hx-push-url="/login"
+        hx-target=".wrapper"
+        hx-swap="outerHTML"
+        hx-push-url="true"
         class="label-font"
     >Sign In
     </li>
@@ -19,18 +21,20 @@
 </header>
 
 <header th:fragment="loginHeader" class="loginHeader">
-  <div class="loginHeader--img-wrapper">
-   <img class="loginHeader--img-wrapper__img"
-        th:src="@{/images/wordivore.png}"
-   >
-  </div>
+    <a href="/" class="loginHeader--link">
+      <img class="loginHeader--img-wrapper__img"
+           th:src="@{/images/wordivore.png}"
+      >
+    </a>
 </header>
 
 <header th:fragment="authenticatedHeader" class="authenticatedHeader">
   <div class="authenticatedHeader--img-wrapper">
-    <img class="authenticatedHeader--img-wrapper__img"
-         th:src="@{/images/wordivore.png}"
-    >
+    <a href="/user">
+      <img class="authenticatedHeader--img-wrapper__img"
+           th:src="@{/images/wordivore.png}"
+      >
+    </a>
   </div>
 
   <form class="authenticatedHeader--form"

@@ -24,3 +24,5 @@ COPY --from=build /app/target/*-SNAPSHOT.jar app.jar
 EXPOSE 8080
 
 ENTRYPOINT ["java","-jar","/home/appuser/app.jar"]
+#ENTRYPOINT ["/bin/sh","-c","java -Dserver.port=$PORT -jar /home/appuser/app.jar"]
+#

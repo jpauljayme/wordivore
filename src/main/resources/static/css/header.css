@@ -22,9 +22,9 @@
     height: 50px;
 }
 
-.loginHeader--img-wrapper {
-    display:flex;
-    justify-content: center;
+.loginHeader--link{
+    display: grid;
+    place-items: center;
 }
 
 .loginHeader--img-wrapper__img {

@@ -10,8 +10,9 @@
   </div>
 
     <button th:attr="hx-get=@{/books/all}"
-           hx-push-url="true"
-            hx-target="#main"
+            hx-push-url="true"
+            hx-target="main"
+            hx-swap="outerHTML"
     >
         View all
     </button>
