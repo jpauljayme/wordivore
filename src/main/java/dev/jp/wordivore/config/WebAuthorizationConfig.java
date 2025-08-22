@@ -14,12 +14,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
     public class WebAuthorizationConfig {
 
         private final AuthenticationSuccessHandler authenticationSuccessHandler;
-        private final AuthenticationProvider authenticationProvider;
 
         @Bean
         SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
-
-            httpSecurity.authenticationProvider(authenticationProvider);
 
             httpSecurity
                     .sessionManagement( sessionManagement -> sessionManagement
@@ -43,7 +40,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
                             .logoutUrl("/logout")
                             .logoutSuccessUrl("/")
                             .invalidateHttpSession(true)
-                            .deleteCookies("JESSIONID")
+                            .deleteCookies("JSESSIONID")
                     )
 
             ;

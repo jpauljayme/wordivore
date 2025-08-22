@@ -6,14 +6,18 @@ import dev.jp.wordivore.exception.BookNotFoundException;
 import dev.jp.wordivore.model.SecurityUser;
 import dev.jp.wordivore.service.BookService;
 import dev.jp.wordivore.service.OpenLibraryService;
+import dev.jp.wordivore.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Controller
@@ -23,31 +27,34 @@ public class BookController {
 
     private final OpenLibraryService openLibraryService;
     private final BookService bookService;
+    private final S3Service s3Service;
 
-//    @GetMapping("/books/title")
-//    public String SearchBookByTitle(@RequestParam String title){
-//        String result = openLibraryService.searchByTitle(title);
-//        return result;
-//    }
+    @Value("${CLOUDFRONT_URL}")
+    private String prefix;
 
     @PostMapping("books/isbn")
-//    @HxRetarget(value = "#userLibrary")
-//    @HxReswap(value = HxSwapType.OUTER_HTML)
     public String SearchBookByIsbn(Model model,
                                    @RequestParam String isbn,
                                    @AuthenticationPrincipal SecurityUser securityUser
-    ) throws BookNotFoundException {
+    ) throws BookNotFoundException, InterruptedException, BookDuplicateIsbnException, IOException {
         BookDto bookDto = openLibraryService.searchByIsbn(isbn).orElse(null);
 
         if(Objects.nonNull(bookDto)){
-            try {
-                bookService.insertBook(bookDto, isbn, securityUser.getUserId());
-            } catch (BookDuplicateIsbnException e) {
-               log.error(e.getMessage());
-            }
+            bookService.insertBook(bookDto, isbn, securityUser.getUserId());
+            s3Service.uploadCover(isbn, bookDto.coverUrl());
         }
 
+        model.addAttribute("books", bookService.getUserLibraryMostRecent(securityUser.getUserId()));
+        model.addAttribute("prefix", prefix);
+        return "fragments/main :: list";
+    }
+
+    @GetMapping("/books/all")
+    public String viewAllBooks(Model model, @AuthenticationPrincipal SecurityUser securityUser){
+        model.addAttribute("username", securityUser.getUsername());
         model.addAttribute("books", bookService.getUserLibrary(securityUser.getUserId()));
-        return "fragments/main :: userLibrary";
+        model.addAttribute("prefix", prefix);
+
+        return "fragments/main :: viewAll";
     }
 }

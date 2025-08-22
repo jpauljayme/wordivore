@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import java.time.Instant;
 
 @Entity
 @Table(name = "book")
@@ -34,13 +35,14 @@ public class Book extends PersistedEntity {
     @Column(name = "pages", nullable = false)
     private int pages;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "isbn_10",
-        columnDefinition = "text[]",
         nullable = false)
-    private String[] isbn10;
+    private String isbn10;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private AppUser appUser;
+
+    @Column(name = "cover_url")
+    private String coverUrl;
 }

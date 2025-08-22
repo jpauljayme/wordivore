@@ -31,6 +31,7 @@
 		<flyway.version>11.11.1</flyway.version>
 		<mapstruct.version>1.6.2</mapstruct.version>
 		<lombok.version>1.18.34</lombok.version>
+		<aws.version>2.32.25</aws.version>
 	</properties>
 	<dependencies>
 			<dependency>
@@ -113,6 +114,21 @@
 			<artifactId>mapstruct</artifactId>
 			<version>${mapstruct.version}</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>${aws.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>apache-client</artifactId>
+			<version>${aws.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

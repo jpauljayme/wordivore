@@ -7,5 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     email VARCHAR(50) NOT NULL UNIQUE,
     age INTEGER NOT NULL,
     gender TEXT CHECK ( gender IN ('Male', 'Female', 'Prefer Not To Say')),
-    bio TEXT
+    bio TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

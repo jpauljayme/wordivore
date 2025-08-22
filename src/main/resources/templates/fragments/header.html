@@ -2,43 +2,46 @@
         class="landingHeader"
 >
   <div class="landingHeader--img-wrapper">
-    <img class="landingHeader--img-wrapper__img"
-         th:src="@{/images/wordivore.png}"
-     alt="Brand logo of Wordivore"
-    >
+    <a href="/">
+      <img class="landingHeader--img-wrapper__img"
+           th:src="@{/images/wordivore.png}"
+           alt="Brand logo of Wordivore"
+      >
+    </a>
   </div>
   <ul class="landingHeader--signin">
     <li hx-get="/login"
         hx-target=".wrapper"
-        hx-swap="innerHTML"
-        hx-push-url="/login"
-        class="label-font"
+        hx-swap="outerHTML"
+        hx-push-url="true"
     >Sign In
     </li>
   </ul>
 </header>
 
 <header th:fragment="loginHeader" class="loginHeader">
-  <div class="loginHeader--img-wrapper">
-   <img class="loginHeader--img-wrapper__img"
-        th:src="@{/images/wordivore.png}"
-   >
-  </div>
+    <a href="/" class="loginHeader--link">
+      <img class="loginHeader--img-wrapper__img"
+           th:src="@{/images/wordivore.png}"
+      >
+    </a>
 </header>
 
 <header th:fragment="authenticatedHeader" class="authenticatedHeader">
   <div class="authenticatedHeader--img-wrapper">
-    <img class="authenticatedHeader--img-wrapper__img"
-         th:src="@{/images/wordivore.png}"
-    >
+    <a href="/user">
+      <img class="authenticatedHeader--img-wrapper__img"
+           th:src="@{/images/wordivore.png}"
+      >
+    </a>
   </div>
 
-  <form th:action="@{/books/isbn}"
+  <form class="authenticatedHeader--form"
+        th:action="@{/books/isbn}"
         method="post"
         th:attr="hx-post=@{/books/isbn}"
-        hx-target="#userLibrary"
         hx-swap="innerHTML"
-        class="authenticatedHeader--form"
+        hx-target="#userLibraryLanding"
   >
 
     <input type="hidden"
@@ -58,9 +61,10 @@
 
   <div class="authenticatedHeader--logout">
     <button sec:authorize="isAuthenticated()"
-            hx-get="/logout"
+            hx-post="/logout"
             hx-target=".wrapper"
-            hx-swap="innerHTML"
+            hx-swap="outerHTML"
+            hx-push-url="/"
             class="authenticatedHeader--logout__btn"
     >Sign out
     </button>

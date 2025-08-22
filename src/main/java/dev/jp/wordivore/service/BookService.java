@@ -9,7 +9,6 @@ import dev.jp.wordivore.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -21,20 +20,20 @@ public class BookService {
     private final BookMapper bookMapper;
     private final AppUserRepository appUserRepository;
 
-    public List<Book> getUserLibrary(Long id){
-         List<Book> books = bookRepository.findAllByAppUser_Id(id);
-         return books;
+    public List<Book> getUserLibrary(Long id) {
+        return bookRepository.findAllByAppUser_Id(id);
+    }
+
+    public List<Book> getUserLibraryMostRecent(Long id) {
+        return bookRepository.findTop3ByAppUser_IdOrderByCreatedAtDesc(id);
     }
 
     public void insertBook(BookDto bookDto, String isbn, Long userId) throws BookDuplicateIsbnException {
-        if(bookRepository.existsByIsbn10(isbn)){
-            throw new BookDuplicateIsbnException();
+        if (bookRepository.existsByIsbn10(isbn)) {
+            return;
         }
 
         Book book = bookMapper.toEntity(bookDto);
-        if(CollectionUtils.isEmpty(bookDto.isbn10())){
-            book.setIsbn10(new String[]{isbn});
-        }
 
         book.setAppUser(appUserRepository.getReferenceById(userId));
         bookRepository.save(book);
