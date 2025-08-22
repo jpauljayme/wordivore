@@ -1,4 +1,4 @@
-<main th:fragment="userLibraryLanding" id="main">
+<main th:fragment="userLandingMain" id="main">
   <div>
     <span th:text="${'@' + username}"></span>
   </div>
@@ -24,7 +24,7 @@
      th:fragment="list(books)">
 
     <a href="#">
-        <img th:src="${prefix + b.isbn10 + '-M.jpg'}">
+        <img th:src="${prefix + b.isbn10 + '-M.jpg'}" class="img--book">
     </a>
 </div>
 

@@ -13,13 +13,10 @@
     <title>Wordivore</title>
     <link rel="stylesheet" th:href="@{/css/index.css}">
     <link rel="stylesheet" th:href="@{/css/header.css}">
-    <!-- Required Core Stylesheet -->
-    <link rel="stylesheet" th:href="@{/webjars/glidejs__glide/dist/css/glide.core.min.css}">
-    <link rel="stylesheet" href="/webjars/glidejs__glide/dist/css/glide.theme.min.css">
+
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
 
     <script defer th:src="@{/webjars/htmx.org/dist/htmx.min.js}"></script>
-    <script defer th:src="@{/webjars/glidejs__glide/dist/glide.min.js}"></script>
     <script defer th:src="@{/js/index.js}"></script>
     <script>
         document.addEventListener("htmx:configRequest", (e) => {
@@ -43,7 +40,7 @@
             th:replace="~{fragments/landing :: landing}"
         ></main>
         <div sec:authorize="isAuthenticated()"
-            th:replace="~{fragments/main :: userLibraryLanding}"
+            th:replace="~{fragments/main :: userLandingMain}"
         ></div>
 
         <div th:replace="~{fragments/footer :: footer}"></div>

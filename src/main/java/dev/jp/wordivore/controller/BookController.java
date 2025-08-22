@@ -44,9 +44,9 @@ public class BookController {
             s3Service.uploadCover(isbn, bookDto.coverUrl());
         }
 
-        model.addAttribute("books", bookService.getUserLibrary(securityUser.getUserId()));
+        model.addAttribute("books", bookService.getUserLibraryMostRecent(securityUser.getUserId()));
         model.addAttribute("prefix", prefix);
-        return "redirect:/user";
+        return "fragments/main :: list";
     }
 
     @GetMapping("/books/all")

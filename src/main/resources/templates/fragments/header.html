@@ -14,7 +14,6 @@
         hx-target=".wrapper"
         hx-swap="outerHTML"
         hx-push-url="true"
-        class="label-font"
     >Sign In
     </li>
   </ul>
@@ -41,6 +40,8 @@
         th:action="@{/books/isbn}"
         method="post"
         th:attr="hx-post=@{/books/isbn}"
+        hx-swap="innerHTML"
+        hx-target="#userLibraryLanding"
   >
 
     <input type="hidden"

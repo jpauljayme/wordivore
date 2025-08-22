@@ -26,10 +26,10 @@ ul {
 
 button, input[type="submit"]  {
     font-family: atkinsonHyperlegibleNextLight;
-    font-size: 12px;
-    padding: 2px;
+    padding: 8px 12px;
     background-color: rgb(177, 43, 36);
     color: white;
+    border-radius: 5px;
 }
 
 html, body {
@@ -44,8 +44,8 @@ body {
 input{
     box-sizing: border-box;
     outline: none;
-    padding: 2px;
-    font-size: 0.6rem;
+    padding: 8px 12px;
+    border-radius: 5px
 }
 
 input:focus{
@@ -63,6 +63,7 @@ input:focus{
     "footer";
     grid-template-rows: min-content auto auto;
     gap: 30px;
+    padding: 0 20px
 }
 
 
@@ -82,7 +83,7 @@ footer, .footer {
     grid-area: footer;
     font-family: atkinsonHyperlegibleNextLight;
     font-size: 10px;
-    display: grid:
+    display: grid;
     align-items: end;
 }
 
@@ -107,12 +108,16 @@ footer, .footer {
     gap: 10px;
 }
 
-.landing__signup-btn{
-    width: 60px;
-    margin: 0 auto;
+.landing__login-btn {
+    background-color: white;
+    color: black;
 }
 
 .text-muted{
     color: gray;
 }
 
+.img--book {
+    max-width: 100px;
+    heigh: 128px;
+}

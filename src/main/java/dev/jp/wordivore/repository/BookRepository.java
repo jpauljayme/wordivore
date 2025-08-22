@@ -16,5 +16,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     boolean existsByIsbn10(@Param("isbn") String isbn);
 
-    List<Book> findTop4ByAppUser_IdOrderByCreatedAtDesc(Long id);
+    List<Book> findTop3ByAppUser_IdOrderByCreatedAtDesc(Long id);
 }

@@ -93,11 +93,6 @@
 			<groupId>org.webjars.npm</groupId>
 			<version>2.0.6</version>
 		</dependency>
-		<dependency>
-			<groupId>org.webjars.npm</groupId>
-			<artifactId>glidejs__glide</artifactId>
-			<version>3.6.0</version>
-		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
 		<dependency>

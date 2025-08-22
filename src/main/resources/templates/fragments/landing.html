@@ -4,5 +4,13 @@
     class="landing"
 >
     <p>In the deluge of digital transformation, reading is still fundamental.</p>
-    <button class="landing__signup-btn">Sign Up</button>
+    <div>
+        <button class="landing__signup-btn">Sign Up</button>
+        <button class="landing__login-btn"
+                hx-get="/login"
+                hx-target=".wrapper"
+                hx-swap="outerHTML"
+                hx-push-url="true"
+        >Log in</button>
+    </div>
 </main>

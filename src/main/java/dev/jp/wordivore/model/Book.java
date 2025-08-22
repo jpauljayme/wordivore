@@ -35,7 +35,6 @@ public class Book extends PersistedEntity {
     @Column(name = "pages", nullable = false)
     private int pages;
 
-    @JdbcTypeCode(SqlTypes.ARRAY)
     @Column(name = "isbn_10",
         nullable = false)
     private String isbn10;
