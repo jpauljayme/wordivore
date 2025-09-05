@@ -1,10 +1,10 @@
 package dev.jp.wordivore.controller;
 
-import dev.jp.wordivore.dto.BookDto;
+import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.exception.BookDuplicateIsbnException;
 import dev.jp.wordivore.exception.BookNotFoundException;
 import dev.jp.wordivore.model.SecurityUser;
-import dev.jp.wordivore.service.BookService;
+import dev.jp.wordivore.service.LibraryItemService;
 import dev.jp.wordivore.service.OpenLibraryService;
 import dev.jp.wordivore.service.S3Service;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ import java.util.Objects;
 public class BookController {
 
     private final OpenLibraryService openLibraryService;
-    private final BookService bookService;
+    private final LibraryItemService libraryItemService;
     private final S3Service s3Service;
 
     @Value("${CLOUDFRONT_URL}")
@@ -37,14 +37,14 @@ public class BookController {
                                    @RequestParam String isbn,
                                    @AuthenticationPrincipal SecurityUser securityUser
     ) throws BookNotFoundException, InterruptedException, BookDuplicateIsbnException, IOException {
-        BookDto bookDto = openLibraryService.searchByIsbn(isbn).orElse(null);
+        OpenLibraryDto bookDto = openLibraryService.searchByIsbn(isbn).orElse(null);
 
         if(Objects.nonNull(bookDto)){
-            bookService.insertBook(bookDto, isbn, securityUser.getUserId());
+            libraryItemService.insertBook(bookDto, isbn, securityUser.getUserId());
             s3Service.uploadCover(isbn, bookDto.coverUrl());
         }
 
-        model.addAttribute("books", bookService.getUserLibraryMostRecent(securityUser.getUserId()));
+        model.addAttribute("books", libraryItemService.getUserLibraryMostRecent(securityUser.getUserId()));
         model.addAttribute("prefix", prefix);
         return "fragments/main :: list";
     }
@@ -52,7 +52,7 @@ public class BookController {
     @GetMapping("/books/all")
     public String viewAllBooks(Model model, @AuthenticationPrincipal SecurityUser securityUser){
         model.addAttribute("username", securityUser.getUsername());
-        model.addAttribute("books", bookService.getUserLibrary(securityUser.getUserId()));
+        model.addAttribute("books", libraryItemService.getUserLibrary(securityUser.getUserId()));
         model.addAttribute("prefix", prefix);
 
         return "fragments/main :: viewAll";

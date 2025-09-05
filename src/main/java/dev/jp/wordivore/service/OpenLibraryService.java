@@ -1,23 +1,21 @@
 package dev.jp.wordivore.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.jp.wordivore.dto.BookDto;
+import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.dto.BooksApiResponse;
-import dev.jp.wordivore.dto.Docs;
 import dev.jp.wordivore.dto.SearchApiResponse;
+import dev.jp.wordivore.dto.WorkResponseDto;
 import dev.jp.wordivore.exception.BookNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClient;
 
-import java.net.URI;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -37,7 +35,7 @@ public class OpenLibraryService {
                 .body(String.class);
     }
 
-    public Optional<BookDto> searchByIsbn(String isbn) throws BookNotFoundException {
+    public Optional<OpenLibraryDto> searchByIsbn(String isbn) throws BookNotFoundException {
         SearchApiResponse search = openLibraryRestClient.get()
                 .uri(uri -> uri.path("/search.json")
                         .queryParam("isbn", isbn)
@@ -62,14 +60,37 @@ public class OpenLibraryService {
                 .body(BooksApiResponse.class);
 
         String coverUrl = coverBaseUrl + isbn;
-        return Optional.of(new BookDto(
+        List<String> subjects = booksApiResponse != null ? booksApiResponse.subjects() : Collections.<String>emptyList();
+        int pages = booksApiResponse != null ? booksApiResponse.pages() : 0;
+        List<String> isbn10 = booksApiResponse != null ? booksApiResponse.isbn10() : Collections.<String>emptyList();
+        List<String> isbn13 = booksApiResponse != null ? booksApiResponse.isbn13() : Collections.<String>emptyList();
+        List<String> publishers = booksApiResponse != null ? booksApiResponse.publishers() : Collections.emptyList();
+        String editionName = booksApiResponse != null ? booksApiResponse.editionName() : "";
+
+        //TODO: booksapiresponse fields can be null like edition name page isbn ... so i need another check condition.
+        return Optional.of(new OpenLibraryDto(
                 first.authors(),
                 first.publicationDate(),
+                publishers,
                 first.title(),
-                booksApiResponse != null ? booksApiResponse.subjects() : Collections.emptyList(),
-                booksApiResponse != null ? booksApiResponse.pages() : 0,
-                booksApiResponse != null ? booksApiResponse.isbn10().getFirst() : "",
-                coverUrl
+                editionName,
+                subjects,
+                pages,
+                isbn10,
+                isbn13,
+                coverUrl,
+                first.key()
         ));
+    }
+
+    public WorkResponseDto findWorkByKey(String key){
+
+
+        return openLibraryRestClient.get()
+                .uri("/{key}.json", key)
+                .retrieve()
+                .body(WorkResponseDto.class);
+
+
     }
 }

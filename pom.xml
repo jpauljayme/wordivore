@@ -12,7 +12,7 @@
 	<artifactId>wordivore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>wordivore</name>
-	<description>Ticking of the time, words march onwards, and I am the bell</description>
+	<description>Reading is still fundamental.</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -129,6 +129,12 @@
 			<version>${aws.version}</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-utils-hibernate-63</artifactId>
+			<version>3.10.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
