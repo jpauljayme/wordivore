@@ -3,6 +3,7 @@ package dev.jp.wordivore.controller;
 import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.exception.BookDuplicateIsbnException;
 import dev.jp.wordivore.exception.BookNotFoundException;
+import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
 import dev.jp.wordivore.model.SecurityUser;
 import dev.jp.wordivore.service.LibraryItemService;
 import dev.jp.wordivore.service.OpenLibraryService;
@@ -36,12 +37,15 @@ public class BookController {
     public String SearchBookByIsbn(Model model,
                                    @RequestParam String isbn,
                                    @AuthenticationPrincipal SecurityUser securityUser
-    ) throws BookNotFoundException, InterruptedException, BookDuplicateIsbnException, IOException {
-        OpenLibraryDto bookDto = openLibraryService.searchByIsbn(isbn).orElse(null);
+    ) throws BookNotFoundException, OpenLibraryWorkNotFoundException, InterruptedException , IOException {
+        OpenLibraryDto bookDto = openLibraryService.searchByIsbn(isbn).
+            orElseGet(() -> null);
 
         if(Objects.nonNull(bookDto)){
             libraryItemService.insertBook(bookDto, isbn, securityUser.getUserId());
-            s3Service.uploadCover(isbn, bookDto.coverUrl());
+//            if(!bookDto.coverUrl().isEmpty()){
+//                s3Service.uploadCover(isbn, bookDto.coverUrl());
+//            }
         }
 
         model.addAttribute("books", libraryItemService.getUserLibraryMostRecent(securityUser.getUserId()));

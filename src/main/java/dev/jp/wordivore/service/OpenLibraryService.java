@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestClient;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class OpenLibraryService {
+    private final S3Service s3Service;
     private final RestClient openLibraryRestClient;
     private final ObjectMapper objectMapper;
 //              covers.api.baseurl
@@ -35,7 +37,7 @@ public class OpenLibraryService {
                 .body(String.class);
     }
 
-    public Optional<OpenLibraryDto> searchByIsbn(String isbn) throws BookNotFoundException {
+    public Optional<OpenLibraryDto> searchByIsbn(String isbn) throws IOException, InterruptedException {
         SearchApiResponse search = openLibraryRestClient.get()
                 .uri(uri -> uri.path("/search.json")
                         .queryParam("isbn", isbn)
@@ -60,12 +62,17 @@ public class OpenLibraryService {
                 .body(BooksApiResponse.class);
 
         String coverUrl = coverBaseUrl + isbn;
-        List<String> subjects = booksApiResponse != null ? booksApiResponse.subjects() : Collections.<String>emptyList();
+
+        String coverKey = s3Service.uploadCover(isbn, coverUrl)
+                .orElse("");
+
+        List<String> subjects = booksApiResponse != null && booksApiResponse.subjects() != null? booksApiResponse.subjects() : Collections.<String>emptyList();
         int pages = booksApiResponse != null ? booksApiResponse.pages() : 0;
-        List<String> isbn10 = booksApiResponse != null ? booksApiResponse.isbn10() : Collections.<String>emptyList();
-        List<String> isbn13 = booksApiResponse != null ? booksApiResponse.isbn13() : Collections.<String>emptyList();
-        List<String> publishers = booksApiResponse != null ? booksApiResponse.publishers() : Collections.emptyList();
-        String editionName = booksApiResponse != null ? booksApiResponse.editionName() : "";
+        List<String> isbn10 = booksApiResponse != null && booksApiResponse.isbn10()  != null ? booksApiResponse.isbn10() : Collections.<String>emptyList();
+        List<String> isbn13 = booksApiResponse != null && booksApiResponse.isbn13()  != null ? booksApiResponse.isbn13() : Collections.<String>emptyList();
+        List<String> publishers = booksApiResponse != null && booksApiResponse.publishers()  != null ? booksApiResponse.publishers() : Collections.emptyList();
+        String editionName = booksApiResponse != null && booksApiResponse.editionName()  != null ? booksApiResponse.editionName() : "";
+        List<String> publishedPlaces = booksApiResponse != null && booksApiResponse.publishedPlaces() != null ? booksApiResponse.publishedPlaces() : Collections.<String>emptyList();
 
         //TODO: booksapiresponse fields can be null like edition name page isbn ... so i need another check condition.
         return Optional.of(new OpenLibraryDto(
@@ -78,8 +85,10 @@ public class OpenLibraryService {
                 pages,
                 isbn10,
                 isbn13,
-                coverUrl,
-                first.key()
+                first.key(),
+                publishedPlaces,
+                coverKey,
+                coverUrl
         ));
     }
 

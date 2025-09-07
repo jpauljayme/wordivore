@@ -3,6 +3,8 @@ package dev.jp.wordivore.service;
 import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.dto.WorkResponseDto;
 import dev.jp.wordivore.exception.BookDuplicateIsbnException;
+import dev.jp.wordivore.exception.BookNotFoundException;
+import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
 import dev.jp.wordivore.mapstruct.OpenLibraryEditionMapper;
 import dev.jp.wordivore.model.*;
 import dev.jp.wordivore.repository.*;
@@ -10,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -19,7 +22,6 @@ import java.util.Optional;
 @Transactional
 public class LibraryItemService {
     private final EditionRepository editionRepository;
-    private final OpenLibraryEditionMapper bookMapper;
     private final AppUserRepository appUserRepository;
     private final LibraryItemRepository libraryItemRepository;
     private final WorkRepository workRepository;
@@ -27,6 +29,7 @@ public class LibraryItemService {
     private final PersonRepository personRepository;
     private final EditionContributorRepository editionContributorRepository;
     private final OpenLibraryService openLibraryService;
+    private final S3Service s3Service;
 
 
     public List<LibraryItem> getUserLibrary(Long id) {
@@ -40,7 +43,7 @@ public class LibraryItemService {
     }
 
 
-    public void insertBook(OpenLibraryDto openLibraryDto, String isbn, Long userId) throws BookDuplicateIsbnException {
+    public void insertBook(OpenLibraryDto openLibraryDto, String isbn, Long userId) throws OpenLibraryWorkNotFoundException {
 
         Edition edition = (isbn != null && isbn.length() == 10) ?
             editionRepository.findByIsbn10(isbn).orElse(null)
@@ -70,17 +73,25 @@ public class LibraryItemService {
                     //Let's create a new work via OL Work Api
                     WorkResponseDto workResponseDto = openLibraryService.findWorkByKey(openLibraryDto.key());
 
-                    Work workToSave = Work.builder()
-                            .key(workResponseDto.key())
-                            .title(workResponseDto.title())
-                            .description(workResponseDto.description())
-                            .firstSentence(workResponseDto.firstSentence().value())
-                            .subjects(workResponseDto.subjects())
-                            .build();
+                    if(workResponseDto != null && workResponseDto.key() != null && !workResponseDto.key().isEmpty()){
+                        String description = workResponseDto.description() != null ? workResponseDto.description() : "";
+                        String firstSentence = workResponseDto.firstSentence() != null ? workResponseDto.firstSentence().value() : "";
+                        List<String> subjects = workResponseDto.subjects() != null ? workResponseDto.subjects() : Collections.<String>emptyList();
 
-                    return workRepository.save(workToSave);
+                        Work workToSave = Work.builder()
+                                .key(workResponseDto.key())
+                                .title(workResponseDto.title())
+                                .description(description)
+                                .firstSentence(firstSentence)
+                                .subjects(subjects)
+                                .build();
+
+                        return workRepository.save(workToSave);
+                    }
+                    return null;
                 });
 
+        if(work == null) throw new OpenLibraryWorkNotFoundException();
 
         for(String name : openLibraryDto.authors()){
             Person p = personRepository.findByName(name)
@@ -96,16 +107,20 @@ public class LibraryItemService {
             }
         }
 
+
+        String isbn10 = !openLibraryDto.isbn10().isEmpty() ? openLibraryDto.isbn10().getFirst() : "";
+        String isbn13 = !openLibraryDto.isbn13().isEmpty() ? openLibraryDto.isbn13().getFirst() : "";
         Edition newEdition = Edition.builder()
                 .title(openLibraryDto.title())
                 .pages(openLibraryDto.pages())
                 .byStatement("")
                 .publicationDate(openLibraryDto.publicationDate())
-                .isbn10(openLibraryDto.isbn10().getFirst())
-                .isbn13(openLibraryDto.isbn13().getFirst())
+                .isbn10(isbn10)
+                .isbn13(isbn13)
                 .editionName(openLibraryDto.editionName())
                 .publishers(openLibraryDto.publishers())
                 .coverUrl(openLibraryDto.coverUrl())
+                .coverKey(openLibraryDto.coverKey())
                 .work(work)
                 .build();
 

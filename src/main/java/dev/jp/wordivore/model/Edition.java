@@ -42,6 +42,9 @@ public class Edition extends PersistedEntity{
     @Column(name = "cover_url")
     private String coverUrl;
 
+    @Column(name = "cover_key")
+    private String coverKey;
+
     @Type(ListArrayType.class)
     @Column(name = "publishers")
     private List<String> publishers;

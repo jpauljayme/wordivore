@@ -13,7 +13,9 @@ public record OpenLibraryDto(
         int pages,
         List<String> isbn10,
         List<String> isbn13,
-        String coverUrl,
-        String key
+        String key,
+        List<String> publishedPlaces,
+        String coverKey,
+        String coverUrl
 ) {
 }
