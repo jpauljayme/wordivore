@@ -24,6 +24,10 @@ ul {
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 button, input[type="submit"]  {
     font-family: atkinsonHyperlegibleNextLight;
     padding: 8px 12px;
@@ -74,10 +78,7 @@ input:focus{
     gap: 30px;
 }
 
-#userLibraryLanding{
-    display: flex;
-    gap: 40px;
-}
+
 
 footer, .footer {
     grid-area: footer;

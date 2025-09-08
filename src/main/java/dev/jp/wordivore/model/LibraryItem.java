@@ -5,7 +5,6 @@ package dev.jp.wordivore.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 
 @Entity
@@ -29,6 +28,6 @@ public class LibraryItem extends PersistedEntity{
     Edition edition;
 
     @Column(name = "status")
-    ShelfStatus status;
+    String status;
 
 }

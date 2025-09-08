@@ -17,11 +17,12 @@ CREATE INDEX IF NOT EXISTS idx_reviews_user_id ON reviews(user_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_edition_id ON reviews(edition_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_work_id ON reviews(work_id);
 
+
 CREATE TABLE IF NOT EXISTS library_item (
     id BIGINT GENERATED ALWAYS  AS IDENTITY PRIMARY KEY,
     user_id BIGINT              NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     edition_id BIGINT           NOT NULL REFERENCES edition(id) ON DELETE CASCADE,
-    status TEXT DEFAULT 'TO_READ' CHECK (status IN ('TO_READ', 'READING', 'COMPLETED')),
+    status TEXT check (status IN ('to read', 'currently reading', 'read', 'did not finish')),
 
     created_at TIMESTAMPTZ              NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

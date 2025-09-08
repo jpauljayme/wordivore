@@ -55,7 +55,7 @@ public class LibraryItemService {
              if(!libraryItemRepository.existsByAppUser_IdAndEdition_Id(userId, edition.id)){
                  LibraryItem newLibraryItem = LibraryItem.builder()
                          .appUser(appUserRepository.getReferenceById(userId))
-                         .status(ShelfStatus.TO_READ)
+                         .status(ShelfStatus.TO_READ.getStatus())
                          .edition(edition)
                          .build();
                  libraryItemRepository.save(newLibraryItem);
@@ -129,6 +129,7 @@ public class LibraryItemService {
         LibraryItem newLibraryItem = LibraryItem.builder()
             .edition(newEdition)
             .appUser(appUserRepository.getReferenceById(userId))
+            .status(ShelfStatus.TO_READ.getStatus())
             .build();
 
         libraryItemRepository.save(newLibraryItem);

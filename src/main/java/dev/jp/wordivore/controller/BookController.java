@@ -5,6 +5,8 @@ import dev.jp.wordivore.exception.BookDuplicateIsbnException;
 import dev.jp.wordivore.exception.BookNotFoundException;
 import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
 import dev.jp.wordivore.model.SecurityUser;
+import dev.jp.wordivore.repository.AppUserRepository;
+import dev.jp.wordivore.service.AppUserService;
 import dev.jp.wordivore.service.LibraryItemService;
 import dev.jp.wordivore.service.OpenLibraryService;
 import dev.jp.wordivore.service.S3Service;
@@ -28,6 +30,7 @@ public class BookController {
 
     private final OpenLibraryService openLibraryService;
     private final LibraryItemService libraryItemService;
+    private final AppUserService appUserService;
     private final S3Service s3Service;
 
     @Value("${CLOUDFRONT_URL}")
@@ -43,19 +46,19 @@ public class BookController {
 
         if(Objects.nonNull(bookDto)){
             libraryItemService.insertBook(bookDto, isbn, securityUser.getUserId());
-//            if(!bookDto.coverUrl().isEmpty()){
-//                s3Service.uploadCover(isbn, bookDto.coverUrl());
-//            }
         }
 
         model.addAttribute("books", libraryItemService.getUserLibraryMostRecent(securityUser.getUserId()));
+
         model.addAttribute("prefix", prefix);
         return "fragments/main :: list";
     }
 
     @GetMapping("/books/all")
     public String viewAllBooks(Model model, @AuthenticationPrincipal SecurityUser securityUser){
-        model.addAttribute("username", securityUser.getUsername());
+
+
+        model.addAttribute("appUser", securityUser.getAppUser());
         model.addAttribute("books", libraryItemService.getUserLibrary(securityUser.getUserId()));
         model.addAttribute("prefix", prefix);
 

@@ -29,6 +29,9 @@ public class OpenLibraryService {
     @Value("${covers.api.baseurl}")
     private String coverBaseUrl;
 
+    @Value("${WORDIVORE_MISSING_COVER_URL}")
+    private String missingCoverUrl;
+
 
     public String searchByTitle(String title) {
         return openLibraryRestClient.get()
@@ -64,7 +67,7 @@ public class OpenLibraryService {
         String coverUrl = coverBaseUrl + isbn;
 
         String coverKey = s3Service.uploadCover(isbn, coverUrl)
-                .orElse("");
+                .orElse(missingCoverUrl);
 
         List<String> subjects = booksApiResponse != null && booksApiResponse.subjects() != null? booksApiResponse.subjects() : Collections.<String>emptyList();
         int pages = booksApiResponse != null ? booksApiResponse.pages() : 0;

@@ -3,9 +3,12 @@
     <span th:text="${'@' + username}"></span>
   </div>
 
-  <div id="userLibraryLanding">
+  <div id="userLibraryLanding" class="userLibraryLanding">
+    <div>
+        <p th:text="${'Currently reading ' + '(' + libCount + ')'}">Currently Reading (0)</p>
+    </div>
     <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
-    <div th:replace="~{fragments/main :: list(books=${books})}">
+    <div th:replace="~{fragments/main :: shelfView(books=${books})}">
     </div>
   </div>
 
@@ -18,13 +21,29 @@
     </button>
 </main>
 
+<div th:if="${not #lists.isEmpty(books)}"
+     th:each="b : ${books}"
+     th:fragment="shelfView(books)">
+
+    <a href="#">
+        <img th:src="${ prefix + b.edition.coverKey}" class="img--work" alt="book cover">
+    </a>
+</div>
 
 <div th:if="${not #lists.isEmpty(books)}"
      th:each="b : ${books}"
      th:fragment="list(books)">
 
     <a href="#">
-        <img th:src="${ prefix + b.edition.coverKey}" class="img--work">
+        <img th:src="${ prefix + b.edition.coverKey}" class="img--work" alt="book cover">
+        <span th:text="${ b.status}"></span>
+        <span th:text="${ b.edition.title }"> </span>
+        <span th:text="${ b.edition.editionName}"></span>
+        <ul>
+            <li th:each="subject, stat : ${b.edition.work.subjects}">
+                <span th:if="${stat.index} < 3" th:text="${subject}"></span>
+            </li>
+        </ul>
     </a>
 </div>
 
@@ -32,7 +51,8 @@
 
 <main th:fragment="viewAll" id="viewAll">
     <div>
-        <span th:text="${'@' + username}"></span>
+        <span th:text="${'@' + appUser}"></span>
+        <p th:text="${appUser.bio}"></p>
     </div>
 
     <div id="userLibraryViewAll">

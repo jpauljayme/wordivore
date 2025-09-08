@@ -25,9 +25,13 @@ public class UserController {
 
     @GetMapping("/user")
     public String getUser(Model model, @AuthenticationPrincipal SecurityUser securityUser){
+
         model.addAttribute("username", securityUser.getUsername());
         model.addAttribute("prefix", prefix);
-        model.addAttribute("books",  libraryItemService.getUserLibraryMostRecent(securityUser.getUserId()));
+
+        List<LibraryItem> userLib = libraryItemService.getUserLibrary(securityUser.getUserId());
+        model.addAttribute("books",  userLib);
+        model.addAttribute("libCount", userLib.size());
         return "index";
     }
 
