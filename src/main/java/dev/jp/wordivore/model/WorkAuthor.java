@@ -15,9 +15,7 @@ public class WorkAuthor extends PersistedEntity {
     @JoinColumn(name = "person_id", nullable = false)
     Person person;
 
-
     @ManyToOne
     @JoinColumn(name = "work_id", nullable = false)
     Work work;
-
 }

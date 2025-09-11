@@ -1,3 +1,10 @@
+DO $$
+BEGIN
+    CREATE TYPE shelf_status AS ENUM ('TO_READ','CURRENTLY_READING','READ','DNF');
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END$$;
+
 CREATE TABLE IF NOT EXISTS reviews (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     body TEXT,
@@ -17,12 +24,11 @@ CREATE INDEX IF NOT EXISTS idx_reviews_user_id ON reviews(user_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_edition_id ON reviews(edition_id);
 CREATE INDEX IF NOT EXISTS idx_reviews_work_id ON reviews(work_id);
 
-
 CREATE TABLE IF NOT EXISTS library_item (
     id BIGINT GENERATED ALWAYS  AS IDENTITY PRIMARY KEY,
     user_id BIGINT              NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     edition_id BIGINT           NOT NULL REFERENCES edition(id) ON DELETE CASCADE,
-    status TEXT check (status IN ('to read', 'currently reading', 'read', 'did not finish')),
+    status shelf_status,
 
     created_at TIMESTAMPTZ              NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

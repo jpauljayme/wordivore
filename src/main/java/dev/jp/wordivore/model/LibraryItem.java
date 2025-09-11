@@ -4,7 +4,8 @@ package dev.jp.wordivore.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 
 @Entity
@@ -27,7 +28,11 @@ public class LibraryItem extends PersistedEntity{
     @JoinColumn(name = "edition_id", nullable = false)
     Edition edition;
 
-    @Column(name = "status")
-    String status;
+    @Enumerated(value = EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "status",
+    columnDefinition = "shelf_status",
+    nullable = false)
+    ShelfStatus status;
 
 }

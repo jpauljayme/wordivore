@@ -1,6 +1,8 @@
 package dev.jp.wordivore.controller;
 
+import dev.jp.wordivore.dto.LibraryItemDto;
 import dev.jp.wordivore.model.LibraryItem;
+import dev.jp.wordivore.model.LibrarySection;
 import dev.jp.wordivore.model.SecurityUser;
 import dev.jp.wordivore.service.LibraryItemService;
 import dev.jp.wordivore.service.UserService;
@@ -29,9 +31,17 @@ public class UserController {
         model.addAttribute("username", securityUser.getUsername());
         model.addAttribute("prefix", prefix);
 
-        List<LibraryItem> userLib = libraryItemService.getUserLibrary(securityUser.getUserId());
-        model.addAttribute("books",  userLib);
-        model.addAttribute("libCount", userLib.size());
+        List<LibrarySection> library = libraryItemService.getUserLibraryAllSections(securityUser.getUserId());
+
+        List<LibraryItemDto> libraryToRead = library.getFirst().books();
+        model.addAttribute("libraryToRead", libraryToRead);
+        model.addAttribute("libraryToReadCount", libraryToRead.size());
+
+        List<LibraryItemDto> libraryCurrentReads = library.get(1).books();
+        model.addAttribute("libraryCurrentReads", libraryCurrentReads );
+        model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
+
+
         return "index";
     }
 

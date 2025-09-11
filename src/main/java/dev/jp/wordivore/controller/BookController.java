@@ -1,11 +1,11 @@
 package dev.jp.wordivore.controller;
 
+import dev.jp.wordivore.dto.LibraryItemDto;
 import dev.jp.wordivore.dto.OpenLibraryDto;
-import dev.jp.wordivore.exception.BookDuplicateIsbnException;
 import dev.jp.wordivore.exception.BookNotFoundException;
 import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
+import dev.jp.wordivore.model.LibrarySection;
 import dev.jp.wordivore.model.SecurityUser;
-import dev.jp.wordivore.repository.AppUserRepository;
 import dev.jp.wordivore.service.AppUserService;
 import dev.jp.wordivore.service.LibraryItemService;
 import dev.jp.wordivore.service.OpenLibraryService;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -59,7 +60,10 @@ public class BookController {
 
 
         model.addAttribute("appUser", securityUser.getAppUser());
-        model.addAttribute("books", libraryItemService.getUserLibrary(securityUser.getUserId()));
+
+        List<LibraryItemDto> libraryCurrentReads = libraryItemService.getUserLibraryCurrentReads(securityUser.getUserId());
+        model.addAttribute("libraryCurrentReads", libraryCurrentReads);
+        model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
         model.addAttribute("prefix", prefix);
 
         return "fragments/main :: viewAll";

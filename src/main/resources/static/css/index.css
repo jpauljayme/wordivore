@@ -71,7 +71,7 @@ input:focus{
 }
 
 
-#main, main, .login-block {
+.login-block {
     grid-area: main;
     display: grid;
     place-items: center;
@@ -116,9 +116,4 @@ footer, .footer {
 
 .text-muted{
     color: gray;
-}
-
-.img--work {
-    max-width: 100px;
-    height: 128px;
 }
