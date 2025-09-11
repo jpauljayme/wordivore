@@ -29,3 +29,12 @@
     max-width: 100px;
     height: 128px;
 }
+
+.shelf__subject {
+    color: rgb(20, 125, 100);
+}
+
+.shelf__meta {
+    display: grid;
+    gap: 1rem;
+}

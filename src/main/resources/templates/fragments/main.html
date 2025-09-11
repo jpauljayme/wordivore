@@ -53,20 +53,36 @@
             <img th:src="${ prefix + b.coverKey}" class="img--work" alt="book cover">
         </div>
         <div class="shelf__meta">
-            <h3 class="shelf__title" th:text="${ b.title }"> </h3>
+            <h3 class="shelf__title--h3">
+                <span class="shelf__title" th:text="${ b.title }"></span>
+                <span class="shelf__edition" th:text="${ b.editionName}"></span>
+            </h3>
             <div class="shelf__authors">
                 <span class="shelf__author" th:each="author : ${b.authors}" th:text="${author}" ></span>
             </div>
 
-            <span class="shelf__status" th:text="${ b.status}"></span>
-
-            <span class="shelf__edition" th:text="${ b.editionName}"></span>
+            <span class="shelf__page" th:text="${ b.pages + ' pages'}"></span>
+            <span class="shelf__publicationDate" th:text="${ b.publicationDate }"></span>
 
             <ul class="shelf__subjects">
-                <li class="shelf__subject" th:each="subject, stat : ${b.subjectsTop4}">
+                <li class="shelf__subject text-xs" th:each="subject, stat : ${b.subjectsTop4}">
                     <span th:text="${subject}"></span>
                 </li>
             </ul>
+
+            <div>
+                <label for="status-select">
+                    Current Status
+                </label>
+                <select id="status-select">
+                    <option value="TO_READ">to read</option>
+                    <option value="CURRENTLY_READING">currently reading</option>
+                    <option value="READ">read</option>
+                    <option value="DNF">did not finish</option>
+                </select>
+            </div>
+
+            <span class="shelf__status" th:text="${ b.status.getStatus()}"></span>
         </div>
     </article>
 </div>

@@ -30,6 +30,9 @@ CREATE TABLE IF NOT EXISTS library_item (
     edition_id BIGINT           NOT NULL REFERENCES edition(id) ON DELETE CASCADE,
     status shelf_status,
 
+    read_start DATE,
+    read_end DATE,
+
     created_at TIMESTAMPTZ              NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
 

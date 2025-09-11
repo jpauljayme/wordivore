@@ -6,6 +6,7 @@ import dev.jp.wordivore.exception.BookNotFoundException;
 import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
 import dev.jp.wordivore.model.LibrarySection;
 import dev.jp.wordivore.model.SecurityUser;
+import dev.jp.wordivore.model.ShelfStatus;
 import dev.jp.wordivore.service.AppUserService;
 import dev.jp.wordivore.service.LibraryItemService;
 import dev.jp.wordivore.service.OpenLibraryService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,6 +67,8 @@ public class BookController {
         model.addAttribute("libraryCurrentReads", libraryCurrentReads);
         model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
         model.addAttribute("prefix", prefix);
+        EnumMap<ShelfStatus, String> shelfStatusOptions = new EnumMap<>(ShelfStatus.class);
+
 
         return "fragments/main :: viewAll";
     }

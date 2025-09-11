@@ -161,7 +161,9 @@ public class LibraryItemService {
                             li.getStatus(),
                             e.getEditionName(),
                             e.getPages(),
-                            e.getPublicationDate()
+                            e.getPublicationDate(),
+                            li.getReadStart(),
+                            li.getReadEnd()
                     );
                 })
                 .toList();
@@ -200,7 +202,9 @@ public class LibraryItemService {
                             li.getStatus(),
                             e.getEditionName(),
                             e.getPages(),
-                            e.getPublicationDate()
+                            e.getPublicationDate(),
+                            li.getReadStart(),
+                            li.getReadEnd()
                     );
                 }).toList();
 

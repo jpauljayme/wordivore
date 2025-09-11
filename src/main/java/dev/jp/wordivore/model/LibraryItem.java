@@ -7,6 +7,8 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "library_item",
@@ -35,4 +37,9 @@ public class LibraryItem extends PersistedEntity{
     nullable = false)
     ShelfStatus status;
 
+    @Column(name = "read_start")
+    LocalDate readStart;
+
+    @Column(name = "read_end")
+    LocalDate readEnd;
 }
