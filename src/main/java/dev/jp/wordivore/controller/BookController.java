@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
@@ -51,14 +52,11 @@ public class BookController {
             libraryItemService.insertBook(bookDto, isbn, securityUser.getUserId());
         }
 
-        model.addAttribute("books", libraryItemService.getUserLibraryMostRecent(securityUser.getUserId()));
-
-        model.addAttribute("prefix", prefix);
-        return "fragments/main :: list";
+        return "redirect:/user";
     }
 
-    @GetMapping("/books/all")
-    public String viewAllBooks(Model model, @AuthenticationPrincipal SecurityUser securityUser){
+    @GetMapping("/books/currently-reading")
+    public String viewCurrentReads(Model model, @AuthenticationPrincipal SecurityUser securityUser){
 
 
         model.addAttribute("appUser", securityUser.getAppUser());
@@ -67,9 +65,16 @@ public class BookController {
         model.addAttribute("libraryCurrentReads", libraryCurrentReads);
         model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
         model.addAttribute("prefix", prefix);
-        EnumMap<ShelfStatus, String> shelfStatusOptions = new EnumMap<>(ShelfStatus.class);
+        model.addAttribute("shelfStatusValues", ShelfStatus.values());
 
 
-        return "fragments/main :: viewAll";
+        return "fragments/main :: currentReads";
+    }
+
+    @PostMapping("/saveDate")
+    public String saveDate(LocalDate date, Long libraryItemId, Model model) throws BookNotFoundException {
+        libraryItemService.saveLibraryItemDate(libraryItemId, date);
+
+        return "fragments/main :: currentReads";
     }
 }

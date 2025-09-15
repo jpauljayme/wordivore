@@ -9,7 +9,7 @@
           <div th:replace="~{fragments/main :: shelfView(books=${libraryCurrentReads})}">
           </div>
           <button class=""
-            th:attr="hx-get=@{/books/all}"
+            th:attr="hx-get=@{/books/currently-reading}"
                   hx-push-url="true"
                   hx-target="main"
                   hx-swap="outerHTML"
@@ -61,8 +61,10 @@
                 <span class="shelf__author" th:each="author : ${b.authors}" th:text="${author}" ></span>
             </div>
 
-            <span class="shelf__page" th:text="${ b.pages + ' pages'}"></span>
-            <span class="shelf__publicationDate" th:text="${ b.publicationDate }"></span>
+            <div>
+                <span class="shelf__publicationDate" th:text="${ b.publicationDate }"></span>
+                <span class="shelf__page" th:text="${ b.pages + ' pages'}"></span>
+            </div>
 
             <ul class="shelf__subjects">
                 <li class="shelf__subject text-xs" th:each="subject, stat : ${b.subjectsTop4}">
@@ -71,25 +73,23 @@
             </ul>
 
             <div>
-                <label for="status-select">
-                    Current Status
-                </label>
                 <select id="status-select">
-                    <option value="TO_READ">to read</option>
-                    <option value="CURRENTLY_READING">currently reading</option>
-                    <option value="READ">read</option>
-                    <option value="DNF">did not finish</option>
+                    <option th:each="status : ${shelfStatusValues}"
+                            th:value="${status}"
+                            th:text="${status.getStatus()}"
+                            th:selected="${status == b.status}"
+                    >
+                    </option>
                 </select>
             </div>
 
-            <span class="shelf__status" th:text="${ b.status.getStatus()}"></span>
         </div>
     </article>
 </div>
 
 
 
-<main th:fragment="viewAll" id="viewAll" class="reads-page">
+<main th:fragment="currentReads" id="viewAll" class="reads-page">
     <header class="reads-page__header">
         <span class="section__title">Current reads</span>
         <span class="section__title" th:if="${libraryCurrentReadsCount} > 1" th:text="${libraryCurrentReadsCount + ' books'}"></span>
@@ -100,3 +100,26 @@
     >
     </div>
 </main>
+
+<form th:fragment="datePicker(libraryItemId, selectedDate)"
+    th:action="@{/saveDate}"
+    method="post"
+    class="form__datepicker"
+>
+    <input type="hidden"
+        th:name="${_csrf.parameterName}"
+        th:value="${_csrf.token}"
+    />
+
+    <input
+        type="hidden"
+        th:name="libraryItemId"
+        th:value="${libraryItemId}"
+    />
+
+    <div>
+        <input type="date"
+               id="readStart"
+               th:value="${selectedDate}">
+    </div>
+</form>

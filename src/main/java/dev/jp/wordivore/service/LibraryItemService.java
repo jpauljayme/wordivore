@@ -4,6 +4,7 @@ import dev.jp.wordivore.dto.AuthorDto;
 import dev.jp.wordivore.dto.LibraryItemDto;
 import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.dto.WorkResponseDto;
+import dev.jp.wordivore.exception.BookNotFoundException;
 import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
 import dev.jp.wordivore.model.*;
 import dev.jp.wordivore.repository.*;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,7 @@ public class LibraryItemService {
                         .appUser(appUserRepository.getReferenceById(userId))
                         .status(ShelfStatus.TO_READ)
                         .edition(edition)
+                        .readStart(LocalDate.now())
                         .build();
                 libraryItemRepository.save(newLibraryItem);
             }
@@ -104,6 +107,7 @@ public class LibraryItemService {
 
         String isbn10 = !openLibraryDto.isbn10().isEmpty() ? openLibraryDto.isbn10().getFirst() : "";
         String isbn13 = !openLibraryDto.isbn13().isEmpty() ? openLibraryDto.isbn13().getFirst() : "";
+
         Edition newEdition = Edition.builder()
                 .title(openLibraryDto.title())
                 .pages(openLibraryDto.pages())
@@ -124,6 +128,7 @@ public class LibraryItemService {
                 .edition(newEdition)
                 .appUser(appUserRepository.getReferenceById(userId))
                 .status(ShelfStatus.TO_READ)
+                .readStart(LocalDate.now())
                 .build();
 
         libraryItemRepository.save(newLibraryItem);
@@ -232,5 +237,13 @@ public class LibraryItemService {
                         grouped.getOrDefault(ShelfStatus.DNF, new ArrayList<>())
                 )
         );
+    }
+
+    public void saveLibraryItemDate(Long libraryItemId, LocalDate date) throws BookNotFoundException {
+
+        LibraryItem libraryItem = libraryItemRepository.findById(libraryItemId)
+                .orElseThrow(BookNotFoundException::new);
+
+
     }
 }
