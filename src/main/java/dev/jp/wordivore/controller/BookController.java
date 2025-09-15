@@ -7,10 +7,7 @@ import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
 import dev.jp.wordivore.model.LibrarySection;
 import dev.jp.wordivore.model.SecurityUser;
 import dev.jp.wordivore.model.ShelfStatus;
-import dev.jp.wordivore.service.AppUserService;
-import dev.jp.wordivore.service.LibraryItemService;
-import dev.jp.wordivore.service.OpenLibraryService;
-import dev.jp.wordivore.service.S3Service;
+import dev.jp.wordivore.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,9 +29,8 @@ import java.util.Objects;
 public class BookController {
 
     private final OpenLibraryService openLibraryService;
-    private final LibraryItemService libraryItemService;
-    private final AppUserService appUserService;
-    private final S3Service s3Service;
+    private final ShelfReadService shelfReadService;
+    private final ShelfWriteService shelfWriteService;
 
     @Value("${CLOUDFRONT_URL}")
     private String prefix;
@@ -49,10 +44,22 @@ public class BookController {
             orElseGet(() -> null);
 
         if(Objects.nonNull(bookDto)){
-            libraryItemService.insertBook(bookDto, isbn, securityUser.getUserId());
+            shelfWriteService.insertBook(bookDto, isbn, securityUser.getUserId());
         }
 
-        return "redirect:/user";
+        List<LibrarySection> library = shelfReadService.getUserLibraryAllSections(securityUser.getUserId());
+
+        List<LibraryItemDto> libraryToRead = library.getFirst().books();
+        model.addAttribute("libraryToRead", libraryToRead);
+        model.addAttribute("libraryToReadCount", libraryToRead.size());
+
+        List<LibraryItemDto> libraryCurrentReads = library.get(1).books();
+        model.addAttribute("libraryCurrentReads", libraryCurrentReads );
+        model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
+
+        model.addAttribute("prefix", prefix);
+
+        return "fragments/main :: userLandingMain";
     }
 
     @GetMapping("/books/currently-reading")
@@ -61,19 +68,12 @@ public class BookController {
 
         model.addAttribute("appUser", securityUser.getAppUser());
 
-        List<LibraryItemDto> libraryCurrentReads = libraryItemService.getUserLibraryCurrentReads(securityUser.getUserId());
+        List<LibraryItemDto> libraryCurrentReads = shelfReadService.getUserLibraryCurrentReads(securityUser.getUserId());
         model.addAttribute("libraryCurrentReads", libraryCurrentReads);
         model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
         model.addAttribute("prefix", prefix);
         model.addAttribute("shelfStatusValues", ShelfStatus.values());
 
-
-        return "fragments/main :: currentReads";
-    }
-
-    @PostMapping("/saveDate")
-    public String saveDate(LocalDate date, Long libraryItemId, Model model) throws BookNotFoundException {
-        libraryItemService.saveLibraryItemDate(libraryItemId, date);
 
         return "fragments/main :: currentReads";
     }

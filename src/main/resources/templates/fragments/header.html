@@ -40,8 +40,8 @@
         th:action="@{/books/isbn}"
         method="post"
         th:attr="hx-post=@{/books/isbn}"
-        hx-swap="innerHTML"
-        hx-target="#userLibraryLanding"
+        hx-swap="outerHTML"
+        hx-target="main"
   >
 
     <input type="hidden"

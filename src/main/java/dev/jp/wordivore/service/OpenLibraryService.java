@@ -25,7 +25,7 @@ public class OpenLibraryService {
     private final S3Service s3Service;
     private final RestClient openLibraryRestClient;
     private final ObjectMapper objectMapper;
-//              covers.api.baseurl
+
     @Value("${covers.api.baseurl}")
     private String coverBaseUrl;
 
@@ -39,6 +39,7 @@ public class OpenLibraryService {
                 .retrieve()
                 .body(String.class);
     }
+
 
     public Optional<OpenLibraryDto> searchByIsbn(String isbn) throws IOException, InterruptedException {
         SearchApiResponse search = openLibraryRestClient.get()
@@ -77,7 +78,6 @@ public class OpenLibraryService {
         String editionName = booksApiResponse != null && booksApiResponse.editionName()  != null ? booksApiResponse.editionName() : "";
         List<String> publishedPlaces = booksApiResponse != null && booksApiResponse.publishedPlaces() != null ? booksApiResponse.publishedPlaces() : Collections.<String>emptyList();
 
-        //TODO: booksapiresponse fields can be null like edition name page isbn ... so i need another check condition.
         return Optional.of(new OpenLibraryDto(
                 first.authors(),
                 first.publicationDate(),

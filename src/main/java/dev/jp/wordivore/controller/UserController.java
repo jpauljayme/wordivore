@@ -4,7 +4,7 @@ import dev.jp.wordivore.dto.LibraryItemDto;
 import dev.jp.wordivore.model.LibraryItem;
 import dev.jp.wordivore.model.LibrarySection;
 import dev.jp.wordivore.model.SecurityUser;
-import dev.jp.wordivore.service.LibraryItemService;
+import dev.jp.wordivore.service.ShelfReadService;
 import dev.jp.wordivore.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    private final LibraryItemService libraryItemService;
+    private final ShelfReadService shelfReadService;
 
     @Value("${CLOUDFRONT_URL}")
     private String prefix;
@@ -31,7 +31,7 @@ public class UserController {
         model.addAttribute("username", securityUser.getUsername());
         model.addAttribute("prefix", prefix);
 
-        List<LibrarySection> library = libraryItemService.getUserLibraryAllSections(securityUser.getUserId());
+        List<LibrarySection> library = shelfReadService.getUserLibraryAllSections(securityUser.getUserId());
 
         List<LibraryItemDto> libraryToRead = library.getFirst().books();
         model.addAttribute("libraryToRead", libraryToRead);
@@ -42,19 +42,6 @@ public class UserController {
         model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
 
 
-        return "index";
-    }
-
-    @GetMapping("/admin")
-    public String admin(Model model, @AuthenticationPrincipal SecurityUser securityUser){
-
-        model.addAttribute("username", securityUser.getUsername());
-
-        List<LibraryItem> recentFour = libraryItemService.getUserLibrary(securityUser.getUserId())
-                .stream()
-                .sorted(Collections.reverseOrder())
-                .limit(4).toList();
-        model.addAttribute("books", recentFour );
         return "index";
     }
 }

@@ -100,26 +100,3 @@
     >
     </div>
 </main>
-
-<form th:fragment="datePicker(libraryItemId, selectedDate)"
-    th:action="@{/saveDate}"
-    method="post"
-    class="form__datepicker"
->
-    <input type="hidden"
-        th:name="${_csrf.parameterName}"
-        th:value="${_csrf.token}"
-    />
-
-    <input
-        type="hidden"
-        th:name="libraryItemId"
-        th:value="${libraryItemId}"
-    />
-
-    <div>
-        <input type="date"
-               id="readStart"
-               th:value="${selectedDate}">
-    </div>
-</form>
