@@ -1,12 +1,13 @@
 package dev.jp.wordivore.controller;
 
-import dev.jp.wordivore.dto.BookDto;
-import dev.jp.wordivore.exception.BookDuplicateIsbnException;
+import dev.jp.wordivore.dto.LibraryItemDto;
+import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.exception.BookNotFoundException;
+import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
+import dev.jp.wordivore.model.LibrarySection;
 import dev.jp.wordivore.model.SecurityUser;
-import dev.jp.wordivore.service.BookService;
-import dev.jp.wordivore.service.OpenLibraryService;
-import dev.jp.wordivore.service.S3Service;
+import dev.jp.wordivore.model.ShelfStatus;
+import dev.jp.wordivore.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -26,8 +29,8 @@ import java.util.Objects;
 public class BookController {
 
     private final OpenLibraryService openLibraryService;
-    private final BookService bookService;
-    private final S3Service s3Service;
+    private final ShelfReadService shelfReadService;
+    private final ShelfWriteService shelfWriteService;
 
     @Value("${CLOUDFRONT_URL}")
     private String prefix;
@@ -36,25 +39,42 @@ public class BookController {
     public String SearchBookByIsbn(Model model,
                                    @RequestParam String isbn,
                                    @AuthenticationPrincipal SecurityUser securityUser
-    ) throws BookNotFoundException, InterruptedException, BookDuplicateIsbnException, IOException {
-        BookDto bookDto = openLibraryService.searchByIsbn(isbn).orElse(null);
+    ) throws BookNotFoundException, OpenLibraryWorkNotFoundException, InterruptedException , IOException {
+        OpenLibraryDto bookDto = openLibraryService.searchByIsbn(isbn).
+            orElseGet(() -> null);
 
         if(Objects.nonNull(bookDto)){
-            bookService.insertBook(bookDto, isbn, securityUser.getUserId());
-            s3Service.uploadCover(isbn, bookDto.coverUrl());
+            shelfWriteService.insertBook(bookDto, isbn, securityUser.getUserId());
         }
 
-        model.addAttribute("books", bookService.getUserLibraryMostRecent(securityUser.getUserId()));
+        List<LibrarySection> library = shelfReadService.getUserLibraryAllSections(securityUser.getUserId());
+
+        List<LibraryItemDto> libraryToRead = library.getFirst().books();
+        model.addAttribute("libraryToRead", libraryToRead);
+        model.addAttribute("libraryToReadCount", libraryToRead.size());
+
+        List<LibraryItemDto> libraryCurrentReads = library.get(1).books();
+        model.addAttribute("libraryCurrentReads", libraryCurrentReads );
+        model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
+
         model.addAttribute("prefix", prefix);
-        return "fragments/main :: list";
+
+        return "fragments/main :: userLandingMain";
     }
 
-    @GetMapping("/books/all")
-    public String viewAllBooks(Model model, @AuthenticationPrincipal SecurityUser securityUser){
-        model.addAttribute("username", securityUser.getUsername());
-        model.addAttribute("books", bookService.getUserLibrary(securityUser.getUserId()));
-        model.addAttribute("prefix", prefix);
+    @GetMapping("/books/currently-reading")
+    public String viewCurrentReads(Model model, @AuthenticationPrincipal SecurityUser securityUser){
 
-        return "fragments/main :: viewAll";
+
+        model.addAttribute("appUser", securityUser.getAppUser());
+
+        List<LibraryItemDto> libraryCurrentReads = shelfReadService.getUserLibraryCurrentReads(securityUser.getUserId());
+        model.addAttribute("libraryCurrentReads", libraryCurrentReads);
+        model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
+        model.addAttribute("prefix", prefix);
+        model.addAttribute("shelfStatusValues", ShelfStatus.values());
+
+
+        return "fragments/main :: currentReads";
     }
 }

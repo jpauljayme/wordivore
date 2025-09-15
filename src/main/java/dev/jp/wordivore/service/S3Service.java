@@ -1,8 +1,10 @@
 package dev.jp.wordivore.service;
 
+import dev.jp.wordivore.exception.CoverDuplicateException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -14,6 +16,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,18 +30,13 @@ public class S3Service {
     @Value("${aws.s3.prefix}")
     private String prefix;
 
-    public void uploadCover(String key, String coverUrl) throws IOException, InterruptedException {
+    public Optional<String> uploadCover(String key, String coverUrl) {
         String finalKey = prefix + key + "-M.jpg";
 
         if(objectExists(finalKey)){
-            log.info("Key already exists. Cannot upload.");
-            return;
+            log.info("Key already exists. Returning key.");
+           return Optional.of(finalKey);
         }
-        var request = PutObjectRequest.builder()
-                .key(finalKey)
-                .bucket(bucket)
-                .contentType("image/jpeg")
-                .build();
 
         HttpClient http = HttpClient
                 .newBuilder()
@@ -46,23 +44,49 @@ public class S3Service {
                 .followRedirects(HttpClient.Redirect.NORMAL)
                 .build();
 
-        String fullUrl = coverUrl + "-M.jpg";
+        String fullUrl = coverUrl + "-M.jpg?default=false";
 
-        HttpRequest req = HttpRequest.newBuilder()
+        HttpRequest headReq = HttpRequest.newBuilder()
                 .uri(URI.create(fullUrl))
-                .timeout(Duration.ofSeconds(30))
-                .GET()
+                .timeout(Duration.ofSeconds(20))
+                .method("HEAD", HttpRequest.BodyPublishers.noBody())
                 .build();
 
-        HttpResponse<byte[]> response = http.send(req, HttpResponse.BodyHandlers.ofByteArray());
+        try {
+            var head = http.send(headReq, HttpResponse.BodyHandlers.discarding());
 
-        if(response.statusCode() / 100 != 2) {
-            throw new IOException("Failed to fetch image. " + response.statusCode());
+            //No cover in Cover Api
+            if(head.statusCode() == 404) return Optional.empty();
+
+            //Missing
+            if(head.statusCode() / 100 !=2 ) return Optional.empty();
+
+            HttpRequest getReq = HttpRequest.newBuilder()
+                    .uri(URI.create(fullUrl))
+                    .timeout(Duration.ofSeconds(30))
+                    .GET()
+                    .build();
+
+            HttpResponse<byte[]> response = http.send(getReq, HttpResponse.BodyHandlers.ofByteArray());
+
+            if(response.statusCode() / 100 !=2 ) return Optional.empty();
+
+            byte[] body = response.body();
+
+            if(body == null || body.length == 0) return Optional.empty();
+
+            var putObjectRequest = PutObjectRequest.builder()
+                    .key(finalKey)
+                    .bucket(bucket)
+                    .contentType("image/jpeg")
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromBytes(body));
+
+            return Optional.of(finalKey);
+        }catch (IOException | InterruptedException ie){
+            return Optional.empty();
         }
-
-        byte[] body = response.body();
-
-        s3Client.putObject(request, RequestBody.fromBytes(body));
     }
 
     public boolean objectExists(String key){
@@ -75,7 +99,7 @@ public class S3Service {
         }catch (NoSuchKeyException e){
             return false;
         }catch (S3Exception e){
-            if(e.statusCode() == 404){
+            if(e.statusCode() == HttpStatus.NOT_FOUND.value()){
                 return false;
             }
             throw e;

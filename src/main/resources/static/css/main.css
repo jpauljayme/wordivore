@@ -1,0 +1,40 @@
+.library-page {
+    display: grid;
+    gap: 20px;
+    text-align: center;
+}
+
+.reads-page{
+    display: grid;
+    gap: 20px;
+    grid-template-rows: min-content 1fr;
+}
+
+.reads-page__header{
+    display: grid;
+}
+
+.shelf__item--detailed{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1rem;
+}
+
+.section__title{
+    font-weight: bold;
+    color: rgb(177, 43, 36);
+}
+
+.shelf__cover {
+    max-width: 100px;
+    height: 128px;
+}
+
+.shelf__subject {
+    color: rgb(20, 125, 100);
+}
+
+.shelf__meta {
+    display: grid;
+    gap: 1rem;
+}

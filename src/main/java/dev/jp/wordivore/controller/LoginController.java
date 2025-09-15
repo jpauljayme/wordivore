@@ -17,9 +17,6 @@ public class LoginController {
 
     @GetMapping("/login")
     public String login( @RequestHeader(name = "HX-Request", required = false) String hx){
-//        if(hx != null){
-//            return "fragments/login :: login";
-//        }
         return "login";
     }
 

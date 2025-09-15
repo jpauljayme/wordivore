@@ -1,43 +1,102 @@
-<main th:fragment="userLandingMain" id="main">
-  <div>
-    <span th:text="${'@' + username}"></span>
-  </div>
+<main th:fragment="userLandingMain" id="main" xmlns:th="http://www.w3.org/1999/xhtml">
+  <div id="userLibraryLanding" class="library-page">
+      <section class="library__section library__section--current">
+          <div class="section__header">
+              <span class="section__title" th:text="${'Current Reads ' + '(' + libraryCurrentReadsCount + ')'}">Currently Reading (0)</span>
+          </div>
 
-  <div id="userLibraryLanding">
-    <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
-    <div th:replace="~{fragments/main :: list(books=${books})}">
-    </div>
-  </div>
+          <p th:if="${#lists.isEmpty(libraryCurrentReads)}">Nothing here yet.</p>
+          <div th:replace="~{fragments/main :: shelfView(books=${libraryCurrentReads})}">
+          </div>
+          <button class=""
+            th:attr="hx-get=@{/books/currently-reading}"
+                  hx-push-url="true"
+                  hx-target="main"
+                  hx-swap="outerHTML"
+          >
+              View all
+          </button>
+      </section>
+    <hr>
 
-    <button th:attr="hx-get=@{/books/all}"
-            hx-push-url="true"
-            hx-target="main"
-            hx-swap="outerHTML"
-    >
-        View all
-    </button>
+    <section class="library__section library__section--to--read">
+        <header class="section__header">
+            <span class="section__title"
+                      th:text="${ 'To Read: ' + libraryToReadCount}">
+            </span>
+        </header>
+
+        <div th:replace="~{fragments/main :: shelfView(books=${libraryToRead})}"></div>
+    </section>
+  </div>
 </main>
-
 
 <div th:if="${not #lists.isEmpty(books)}"
      th:each="b : ${books}"
-     th:fragment="list(books)">
+     th:fragment="shelfView(books)"
+     class="shelf"
+>
 
-    <a href="#">
-        <img th:src="${prefix + b.isbn10 + '-M.jpg'}" class="img--book">
-    </a>
+    <article class="shelf__item">
+        <img th:src="${ prefix + b.coverKey}" class="shelf__cover" alt="book cover">
+    </article>
+</div>
+
+<div th:if="${not #lists.isEmpty(books)}"
+     th:each="b : ${books}"
+     th:fragment="list(books)"
+     class="shelf shelf--list"
+>
+
+    <article class="shelf__item shelf__item--detailed">
+        <div class="shelf__media">
+            <img th:src="${ prefix + b.coverKey}" class="img--work" alt="book cover">
+        </div>
+        <div class="shelf__meta">
+            <h3 class="shelf__title--h3">
+                <span class="shelf__title" th:text="${ b.title }"></span>
+                <span class="shelf__edition" th:text="${ b.editionName}"></span>
+            </h3>
+            <div class="shelf__authors">
+                <span class="shelf__author" th:each="author : ${b.authors}" th:text="${author}" ></span>
+            </div>
+
+            <div>
+                <span class="shelf__publicationDate" th:text="${ b.publicationDate }"></span>
+                <span class="shelf__page" th:text="${ b.pages + ' pages'}"></span>
+            </div>
+
+            <ul class="shelf__subjects">
+                <li class="shelf__subject text-xs" th:each="subject, stat : ${b.subjectsTop4}">
+                    <span th:text="${subject}"></span>
+                </li>
+            </ul>
+
+            <div>
+                <select id="status-select">
+                    <option th:each="status : ${shelfStatusValues}"
+                            th:value="${status}"
+                            th:text="${status.getStatus()}"
+                            th:selected="${status == b.status}"
+                    >
+                    </option>
+                </select>
+            </div>
+
+        </div>
+    </article>
 </div>
 
 
 
-<main th:fragment="viewAll" id="viewAll">
-    <div>
-        <span th:text="${'@' + username}"></span>
-    </div>
-
-    <div id="userLibraryViewAll">
-        <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
-        <div th:replace="~{fragments/main :: list(books=${books})}">
-        </div>
+<main th:fragment="currentReads" id="viewAll" class="reads-page">
+    <header class="reads-page__header">
+        <span class="section__title">Current reads</span>
+        <span class="section__title" th:if="${libraryCurrentReadsCount} > 1" th:text="${libraryCurrentReadsCount + ' books'}"></span>
+        <span class="section__title" th:if="${libraryCurrentReadsCount == 1}" th:text="${libraryCurrentReadsCount + ' book'}"></span>
+    </header>
+    <div id="userLibraryViewAll"
+         th:replace="~{fragments/main :: list(books=${libraryCurrentReads})}"
+    >
     </div>
 </main>

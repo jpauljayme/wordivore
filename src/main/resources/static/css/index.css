@@ -24,6 +24,10 @@ ul {
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+}
+
 button, input[type="submit"]  {
     font-family: atkinsonHyperlegibleNextLight;
     padding: 8px 12px;
@@ -67,17 +71,14 @@ input:focus{
 }
 
 
-#main, main, .login-block {
+.login-block {
     grid-area: main;
     display: grid;
     place-items: center;
     gap: 30px;
 }
 
-#userLibraryLanding{
-    display: flex;
-    gap: 40px;
-}
+
 
 footer, .footer {
     grid-area: footer;
@@ -117,7 +118,7 @@ footer, .footer {
     color: gray;
 }
 
-.img--book {
-    max-width: 100px;
-    heigh: 128px;
+.text-xs {
+    font-size: .75rem;
+    line-height: 1rem;
 }
