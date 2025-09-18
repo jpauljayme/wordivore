@@ -148,6 +148,18 @@
 			<version>3.2.2</version>
 		</dependency>
 
+		<dependency>
+			<artifactId>bootstrap</artifactId>
+			<groupId>org.webjars</groupId>
+			<version>5.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>bootstrap-icons</artifactId>
+			<version>1.11.3</version>
+		</dependency>
+
 
 	</dependencies>
 

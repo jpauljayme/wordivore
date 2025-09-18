@@ -30,14 +30,16 @@ a {
 
 button, input[type="submit"]  {
     font-family: atkinsonHyperlegibleNextLight;
-    padding: 8px 12px;
+    padding: 4px 6px;
     background-color: rgb(177, 43, 36);
     color: white;
     border-radius: 5px;
+    font-size: 0.7rem;
 }
 
 html, body {
     height: 100%;
+    font-size: 0.8rem;
 }
 
 body {
@@ -99,9 +101,6 @@ footer, .footer {
 }
 
 
-@media only screen and (min-width: 992px) {
-}
-
 .landing {
     display: grid;
     place-content: center;
@@ -121,4 +120,9 @@ footer, .footer {
 .text-xs {
     font-size: .75rem;
     line-height: 1rem;
+}
+
+
+
+@media only screen and (min-width: 992px) {
 }

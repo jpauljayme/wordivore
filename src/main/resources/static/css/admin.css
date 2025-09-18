@@ -1,0 +1,12 @@
+th, td {
+    padding: 10px;
+}
+
+.adminDashboard__user--action{
+    display: flex;
+    gap: 10px;
+}
+
+.page-item.active .page-link{
+    background-color: rgb(177,43,36);
+}
