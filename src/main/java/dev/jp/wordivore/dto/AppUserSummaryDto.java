@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AppUserSummaryDto {
+    private Long id;
     private String username;
     private String email;
     private boolean enabled;

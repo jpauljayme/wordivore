@@ -23,28 +23,7 @@
         <tr th:each="u : ${userPage.content}"
             class="adminDashboard__user"
         >
-            <td th:text="${u.username}"></td>
-            <td th:text="${u.email}"></td>
-            <td th:if="${u.enabled}"
-                class="adminDashboard__user--status"
-            >enabled
-            </td>
-            <td th:unless="${u.enabled}"
-                class="adminDashboard__user--status"
-            >disabled
-            </td>
-            <td class="adminDashboard__user--action">
-                <button th:if="${u.enabled}"
-                        hx-post="/admin/user/disable"
-                        hx-target=".adminDashboard"
-                        hx-swap="innerHtml"
-                >Disable</button>
-                <button th:unless="${u.enabled}"
-                        hx-post="/admin/user/enable"
-                        hx-target=".adminDashboard"
-                        hx-swap="innerHtml"
-                >Enable</button>
-            </td>
+            <td th:replace="~{fragments/admin :: userDetailsRow(u=${u}) }"></td>
         </tr>
         </tbody>
     </table>
@@ -88,3 +67,30 @@
         </ul>
     </nav>
 </div>
+
+<tr th:fragment="userDetailsRow(u)"
+    th:id="${'user__row-' + u.id }"
+>
+    <td th:text="${u.username}"></td>
+    <td th:text="${u.email}"></td>
+    <td th:if="${u.enabled}"
+        class="adminDashboard__user--status"
+    >enabled
+    </td>
+    <td th:unless="${u.enabled}"
+        class="adminDashboard__user--status"
+    >disabled
+    </td>
+    <td class="adminDashboard__user--action">
+        <button th:if="${u.enabled}"
+                th:hx-post="@{/admin/user/disable(username=${u.username})}"
+                th:hx-target="'#user__row-' + ${u.id}"
+                hx-swap="outerHTML"
+        >Disable</button>
+        <button th:unless="${u.enabled}"
+                th:hx-post="@{/admin/user/enable(username=${u.username})}"
+                th:hx-target="'#user__row-' + ${u.id}"
+                hx-swap="outerHTML"
+        >Enable</button>
+    </td>
+</tr>

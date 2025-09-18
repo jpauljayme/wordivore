@@ -23,6 +23,7 @@ public class AppUserReadService {
 
     public Page<AppUserSummaryDto> list(int page){
         return appUserRepository.findAll(PageRequest.of(page, 5)).map(appUser -> AppUserSummaryDto.builder()
+                .id(appUser.id)
                 .email(appUser.getEmail())
                 .username(appUser.getUsername())
                 .enabled(appUser.isEnabled())

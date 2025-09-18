@@ -1,6 +1,7 @@
 package dev.jp.wordivore.controller;
 
 import dev.jp.wordivore.common.admin.AdminEndpoint;
+import dev.jp.wordivore.dto.AppUserSummaryDto;
 import dev.jp.wordivore.dto.UserPage;
 import dev.jp.wordivore.service.AdminReadService;
 import dev.jp.wordivore.service.AppUserWriteService;
@@ -37,17 +38,19 @@ public class AdminController {
     @PostMapping("/user/enable")
     public String enableUser(Model model, String username){
 
-        appUserWriteService.enable(username);
+        AppUserSummaryDto user = appUserWriteService.enable(username);
 
-        return "fragment/admin :: adminDashboard";
+        model.addAttribute("u", user);
+        return "fragments/admin :: userDetailsRow";
     }
 
     @PostMapping("/user/disable")
     public String disableUser(Model model, String username){
 
-        appUserWriteService.disable(username);
+        AppUserSummaryDto user = appUserWriteService.disable(username);
 
-        return "fragment/admin :: adminDashboard";
+        model.addAttribute("u", user);
+        return "fragments/admin :: userDetailsRow";
     }
 
 
