@@ -8,13 +8,10 @@ public record OpenLibraryDto(
         Integer publicationDate,
         List<String> publishers,
         String title,
-        String editionName,
-        List<String> subjects,
         int pages,
-        List<String> isbn10,
-        List<String> isbn13,
+        String isbn10,
+        String isbn13,
         String key,
-        List<String> publishedPlaces,
         String coverKey,
         String coverUrl
 ) {

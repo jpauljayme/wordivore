@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS edition (
     pages INTEGER DEFAULT 0,
     isbn_10 VARCHAR(10) DEFAULT '',
     isbn_13 VARCHAR(13) DEFAULT '',
-    edition_name TEXT DEFAULT '',
     cover_url TEXT,
     cover_key TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

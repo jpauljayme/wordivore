@@ -14,7 +14,6 @@ public record LibraryItemDto(
     List<String> subjectsTop4,
     String coverKey,
     ShelfStatus status,
-    String editionName,
     int pages,
     Integer publicationDate,
     LocalDate readStart,
