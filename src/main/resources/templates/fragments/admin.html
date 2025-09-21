@@ -1,0 +1,96 @@
+<main th:fragment="adminDashboard" class="adminDashboard">
+    <div>
+       <span>Welcome</span>
+       <span sec:authentication="name"></span>
+    </div>
+    <div th:replace="~{fragments/admin :: usersTable}"></div>
+</main>
+
+<div th:fragment="usersTable"
+    id="usersContainer"
+     class="table-responsive"
+>
+    <table class="adminDashboard__table">
+        <thead class="adminDashboard__header">
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="u : ${userPage.content}"
+            class="adminDashboard__user"
+        >
+            <td th:replace="~{fragments/admin :: userDetailsRow(u=${u}) }"></td>
+        </tr>
+        </tbody>
+    </table>
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item"
+                th:classappend="${currentPage == 0} ? 'disabled'"
+            >
+                <a  class="page-link"
+                    th:hx-get="@{/admin(page=${currentPage - 1})}"
+                    hx-target="#usersContainer"
+                    hx-swap="innerHTML"
+                >
+                    Previous
+                </a>
+            </li>
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${currentPage == i } ? 'active'"
+            >
+                <a class="page-link"
+                   th:text="${i + 1}"
+                   th:hx-get="@{/admin(page=${i})}"
+                   hx-target="#usersContainer"
+                   hx-swap="innerHTML"
+                >
+                    1
+                </a>
+            </li>
+            <li class="page-item"
+                th:classappend="${currentPage + 1 >= totalPages} ? 'disabled'"
+            >
+                <a class="page-link"
+                   th:hx-get="@{/admin(page=${currentPage + 1})}"
+                   hx-target="#usersContainer"
+                   hx-swap="innerHTML"
+                >
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<tr th:fragment="userDetailsRow(u)"
+    th:id="${'user__row-' + u.id }"
+>
+    <td th:text="${u.username}"></td>
+    <td th:text="${u.email}"></td>
+    <td th:if="${u.enabled}"
+        class="adminDashboard__user--status"
+    >enabled
+    </td>
+    <td th:unless="${u.enabled}"
+        class="adminDashboard__user--status"
+    >disabled
+    </td>
+    <td class="adminDashboard__user--action">
+        <button th:if="${u.enabled}"
+                th:hx-post="@{/admin/user/disable(username=${u.username})}"
+                th:hx-target="'#user__row-' + ${u.id}"
+                hx-swap="outerHTML"
+        >Disable</button>
+        <button th:unless="${u.enabled}"
+                th:hx-post="@{/admin/user/enable(username=${u.username})}"
+                th:hx-target="'#user__row-' + ${u.id}"
+                hx-swap="outerHTML"
+        >Enable</button>
+    </td>
+</tr>

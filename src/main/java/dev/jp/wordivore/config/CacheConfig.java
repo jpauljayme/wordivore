@@ -19,7 +19,7 @@ public class CacheConfig {
     public CacheManager cacheManager(){
 
         var cm = new CaffeineCacheManager(
-            "shelf", "shelfSections"
+            "shelf", "shelfSections", "ol:isbn"
         );
 
         cm.setCaffeine(

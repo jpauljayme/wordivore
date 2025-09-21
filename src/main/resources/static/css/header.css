@@ -1,23 +1,30 @@
-.authenticatedHeader, .landingHeader {
+.userHeader, .landingHeader {
     grid-area: header;
     display: grid;
     align-items: center;
 }
 
-.authenticatedHeader {
+.userHeader {
     grid-template-columns: 0.5fr 1fr max-content;
     gap: 10px;
+}
+
+.adminHeader__header {
+    display: grid;
+    grid-template-columns: 0.5fr 1fr;
 }
 
 .landingHeader {
      grid-template-columns: 1fr 1fr;
 }
 
-.authenticatedHeader--img-wrapper__img, .landingHeader--img-wrapper__img {
+.userHeader__img, .landingHeader--img-wrapper__img {
     width: 50px;
 }
 
-.authenticatedHeader--logout, .landingHeader--signin {
+.userHeader__logout--btn,
+.landingHeader--signin,
+.adminHeader__logout {
     text-align: end;
     height: 50px;
 }
@@ -36,6 +43,6 @@
     font-size: 12px;
 }
 
-.authenticatedHeader--form__inputIsbn{
+.userHeader__form--inputIsbn{
     height: 50px;
 }

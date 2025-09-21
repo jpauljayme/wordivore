@@ -28,9 +28,6 @@ public class AppUser extends PersistedEntity{
     @Column(name = "email")
     private String email;
 
-    @Column(name = "age")
-    private int age;
-
     @Column(name = "gender")
     private String gender;
 

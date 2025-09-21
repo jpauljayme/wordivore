@@ -55,9 +55,6 @@ public class Edition extends PersistedEntity{
     @Column(name = "pages")
     private Integer pages;
 
-    @Column(name = "edition_name")
-    private String editionName;
-
    @ManyToOne(fetch = FetchType.LAZY,
    optional = false)
    @JoinColumn(name = "work_id", nullable = false)

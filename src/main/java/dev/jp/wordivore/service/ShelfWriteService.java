@@ -100,17 +100,14 @@ public class ShelfWriteService {
         }
 
 
-        String isbn10 = !openLibraryDto.isbn10().isEmpty() ? openLibraryDto.isbn10().getFirst() : "";
-        String isbn13 = !openLibraryDto.isbn13().isEmpty() ? openLibraryDto.isbn13().getFirst() : "";
 
         Edition newEdition = Edition.builder()
                 .title(openLibraryDto.title())
                 .pages(openLibraryDto.pages())
                 .byStatement("")
                 .publicationDate(openLibraryDto.publicationDate())
-                .isbn10(isbn10)
-                .isbn13(isbn13)
-                .editionName(openLibraryDto.editionName())
+                .isbn10(openLibraryDto.isbn10())
+                .isbn13(openLibraryDto.isbn13())
                 .publishers(openLibraryDto.publishers())
                 .coverUrl(openLibraryDto.coverUrl())
                 .coverKey(openLibraryDto.coverKey())
