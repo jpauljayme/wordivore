@@ -35,4 +35,17 @@ public class RestClientConfig {
                 .build();
     }
 
+    @Bean
+    public RestClient wordnikRestClient(RestClient.Builder builder){
+        HttpClient httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+
+        return RestClient.builder()
+                .baseUrl("https://api.wordnik.com/v4")
+                .defaultHeader(HttpHeaders.ACCEPT, "application/json")
+                .defaultHeader(HttpHeaders.USER_AGENT, "wordivore/1.0 (jpaul.jayme@gmail.com)")
+                .requestFactory(new JdkClientHttpRequestFactory(httpClient))
+                .build();
+    }
 }

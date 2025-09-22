@@ -20,6 +20,7 @@
     <link rel="stylesheet" th:href="@{/css/header.css}">
     <link rel="stylesheet" th:href="@{/css/main.css}">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/wordnik.css}">
 
 
     <link rel="icon" type="image/x-icon" th:href="@{/images/favicon.ico}">
@@ -43,9 +44,13 @@
                 th:replace="~{fragments/header :: userHeader}"></div>
 
         <div sec:authorize="isAuthenticated() and hasRole('ADMIN')"
-            th:replace="~{fragments/header ::adminHeader }"
+            th:replace="~{fragments/header :: adminHeader }"
         >
         </div>
+
+        <div sec:authorize="isAuthenticated() and hasRole('USER')"
+            th:replace="~{fragments/wordnik :: wordOfTheDay }"
+        ></div>
 
         <div sec:authorize="isAnonymous()"
              th:replace="~{fragments/header :: landingHeader}"></div>

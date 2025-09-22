@@ -1,0 +1,31 @@
+<article th:fragment="wordOfTheDay"
+    class="wordnik__wotd"
+>
+    <header class="wotd__word text-center">
+        <span th:text="${#temporals.format(#temporals.createNow(), 'MMMM dd, yyyy')}">Guess the date!</span>
+        <div>
+            <span>Word of the day: </span>
+            <span class="wotd__word--word"
+                  th:text="${wotd.word}">Word of the day is currently unavailable.</span>
+        </div>
+    </header>
+
+   <div class="wotd___def">
+       <p class="wotd__def--partOfSpeech text-center"
+          th:text="${wotd.definitions[0].partOfSpeech}">
+          No definition right now.
+       </p>
+       <span>Definition:</span>
+       <p class="wotd__def--text" th:text="${wotd.definitions[0].text}">
+           No definition right now.
+       </p>
+   </div>
+
+    <div class="wotd__example">
+        <span>Example:</span>
+        <blockquote cite="${wotd.examples[0].url}"
+            class="wotd__def__example--text" th:text="${wotd.examples[0].text}">
+            No examples right now.
+        </blockquote>
+    </div>
+</article>

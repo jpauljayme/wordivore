@@ -65,6 +65,7 @@ input:focus{
     display: grid;
     grid-template-areas:
     "header"
+    "wotd"
     "main"
     "footer";
     grid-template-rows: min-content auto auto;
