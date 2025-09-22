@@ -1,0 +1,22 @@
+.wordnik__wotd{
+    grid-area: wotd;
+    display: grid;
+    place-content: center;
+    border-bottom: 1px solid rgb(177, 43, 36);
+    padding-bottom: 10px;
+}
+
+.wotd__def__example--text{
+    font-style: italic;
+}
+
+
+.wotd__word--word{
+    color: rgb(177, 43, 36);
+}
+
+
+.wotd__example, wotd___def{
+    display: grid;
+}
+

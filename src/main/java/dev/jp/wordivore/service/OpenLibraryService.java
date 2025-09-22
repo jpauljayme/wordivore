@@ -2,15 +2,14 @@ package dev.jp.wordivore.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.dto.BooksApiResponse;
+import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.dto.SearchApiResponse;
 import dev.jp.wordivore.dto.WorkResponseDto;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.client.utils.URIBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -21,12 +20,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.util.UriBuilder;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.net.URI;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -55,8 +49,6 @@ public class OpenLibraryService {
     public Optional<OpenLibraryDto> searchByIsbn(String isbn) {
 
         try {
-            //        SearchApiResponse search =
-
             String raw = openLibraryRestClient.get()
                     .uri(uri -> uri.path("/search.json")
                             .queryParam("isbn", isbn)
@@ -65,15 +57,6 @@ public class OpenLibraryService {
                     )
                     .accept(MediaType.APPLICATION_JSON)
                     .retrieve()
-//                .onStatus(httpStatusCode -> httpStatusCode != HttpStatus.OK, (request, response) -> {
-//
-//                    if(response.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS){
-//                        log.warn("Rate limit hit during search with ISBN : {}", isbn);
-//                        throw new HttpClientErrorException(HttpStatus.TOO_MANY_REQUESTS);
-//                    }
-//                    throw new RuntimeException("API Execution request failed with status : " + response.getStatusCode());
-//                })
-//                .body(SearchApiResponse.class);
                     .body(String.class);
 
             log.info(raw);
@@ -177,11 +160,6 @@ public class OpenLibraryService {
     public Optional<OpenLibraryDto> searchByIsbnFallback(String isbn, Exception e){
         log.warn("Fallback triggered for ISBN: {}, error: {}", isbn, e.getMessage());
         return Optional.empty();
-    }
-
-    public BooksApiResponse getBookDetailsFallback(String isbn, Exception e){
-        log.warn("Book details fallback for isbn: {} and error: {}", isbn, e.getMessage());
-        return null;
     }
 
     public WorkResponseDto findByWorkKeyFallback(String key, Exception e){
