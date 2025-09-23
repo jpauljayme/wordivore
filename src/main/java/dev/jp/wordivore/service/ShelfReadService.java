@@ -127,8 +127,6 @@ public class ShelfReadService {
                     );
                 })
                 .toList();
-                })
-                .toList();
     }
 
     public Optional<LibraryItemDto> getBookById(Long id) throws BookNotFoundException {

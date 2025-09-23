@@ -1,33 +1,33 @@
 
 <main th:fragment="userLandingMain" id="main" xmlns:th="http://www.w3.org/1999/xhtml">
-  <div id="userLibraryLanding" class="library-page">
-      <section class="library__section library__section--current">
-          <div class="section__header">
-              <span class="section__title" th:text="${'Current Reads ' + '(' + libraryCurrentReadsCount + ')'}">Currently Reading (0)</span>
-          </div>
+    <div id="userLibraryLanding" class="library-page">
+        <section class="library__section library__section--current">
+            <div class="section__header">
+                <span class="section__title" th:text="${'Current Reads ' + '(' + libraryCurrentReadsCount + ')'}">Currently Reading (0)</span>
+            </div>
 
-          <p th:if="${#lists.isEmpty(libraryCurrentReads)}">Nothing here yet.</p>
-          <div th:replace="~{fragments/main :: shelfView(books=${libraryCurrentReads})}">
-          </div>
-          <button class=""
-            th:attr="hx-get=@{/books/currently-reading}"
-                  hx-push-url="true"
-                  hx-target="main"
-                  hx-swap="outerHTML"
-          >
-              View all
-          </button>
-      </section>
+            <p th:if="${#lists.isEmpty(libraryCurrentReads)}">Nothing here yet.</p>
+            <div th:replace="~{fragments/main :: shelfView(books=${libraryCurrentReads})}">
+            </div>
+            <button class=""
+                    th:attr="hx-get=@{/books/currently-reading}"
+                    hx-push-url="true"
+                    hx-target="main"
+                    hx-swap="outerHTML"
+            >
+                View all
+            </button>
+        </section>
 
-    <section class="library__section library__section--to--read">
-        <header class="section__header">
+        <section class="library__section library__section--to--read">
+            <header class="section__header">
             <span class="section__title"
                   th:text="${ 'To Read: ' + libraryToReadCount}">
             </span>
-        </header>
+            </header>
 
-        <div id="to-read-list"
-            th:replace="~{fragments/main :: shelfView(books=${libraryToRead})}"></div>
+            <div id="to-read-list"
+                 th:replace="~{fragments/main :: shelfView(books=${libraryToRead})}"></div>
             <button class=""
                     th:attr="hx-get=@{/books/to-read}"
                     hx-push-url="true"
@@ -36,8 +36,8 @@
             >
                 View all
             </button>
-    </section>
-  </div>
+        </section>
+    </div>
 </main>
 
 <div th:if="${not #lists.isEmpty(books)}"
@@ -86,4 +86,3 @@
     <div th:replace="~{fragments/main :: list(books=${libraryToRead})}">
     </div>
 </main>
-
