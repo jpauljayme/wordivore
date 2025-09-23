@@ -26,7 +26,7 @@ public class WordnikService {
     @Cacheable(cacheNames = "wordnik:wotd", key = "#date", sync = true)
     @RateLimiter(name = "wordnik-rate-limiter")
     @Retry(name = "wordnik-retry", fallbackMethod = "getWordOfTheDayFallback")
-    public WordOfTheDayResponse getWordOfTheDay(LocalDate date){
+    public WordOfTheDayResponse getWordOfTheDayFallback(LocalDate date){
         return wordnikRestClient.get()
                 .uri(uri -> uri.path("/words.json/wordOfTheDay")
                         .queryParam("date", date)
@@ -40,7 +40,7 @@ public class WordnikService {
 
     }
 
-    public WordOfTheDayResponse getWordOfTheDay(LocalDate date, Exception e){
+    public WordOfTheDayResponse getWordOfTheDayFallback(LocalDate date, Exception e){
         log.warn("Fallback triggered for wordnik word-of-the-day of date: {}, error {}", date, e.getMessage());
         return null;
     }

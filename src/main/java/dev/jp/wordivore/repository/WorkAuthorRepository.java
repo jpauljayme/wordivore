@@ -12,8 +12,6 @@ import java.util.List;
 @Repository
 public interface WorkAuthorRepository extends JpaRepository<WorkAuthor, Long> {
 
-    boolean findByPerson_NameIn(List<String> names);
-
     boolean existsByWork_IdAndPerson_Id(Long workId, Long personId);
 
 
@@ -28,4 +26,14 @@ public interface WorkAuthorRepository extends JpaRepository<WorkAuthor, Long> {
             """)
     //Add position column
     List<AuthorDto> findRowsByWork_Id(Collection<Long> workIds);
+
+    @Query("""
+            SELECT new dev.jp.wordivore.dto.AuthorDto(
+                wa.work.id,
+                wa.person.name
+            )
+                FROM WorkAuthor wa
+                    WHERE wa.work.id =:workId
+            """)
+    List<AuthorDto> findAllByWork_Id(Long workId);
 }

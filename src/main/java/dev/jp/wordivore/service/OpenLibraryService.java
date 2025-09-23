@@ -2,7 +2,6 @@ package dev.jp.wordivore.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.jp.wordivore.dto.BooksApiResponse;
 import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.dto.SearchApiResponse;
 import dev.jp.wordivore.dto.WorkResponseDto;
@@ -131,30 +130,6 @@ public class OpenLibraryService {
                 .uri("/search.json?q=title:{title}", title)
                 .retrieve()
                 .body(String.class);
-    }
-
-    @Retry(name = "openlibrary-retry", fallbackMethod = "getBookDetailsFallback")
-    private BooksApiResponse getBookDetailsWithRetry(String isbn){
-        log.debug("Fetching book details thru isbn api with id: {}", isbn);
-
-        return openLibraryRestClient.get()
-                .uri("/books/{isbn}.json", isbn)
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                    if(response.getStatusCode() == HttpStatus.TOO_MANY_REQUESTS) {
-                        log.warn("Rate limit for isbn {} will retry ", isbn);
-                        throw new HttpClientErrorException(HttpStatus.TOO_MANY_REQUESTS);
-                    }
-
-                    log.warn("Failed to fetch book details thru the ISBN API for isbn: {}, status: {}", isbn, response.getStatusCode());
-
-                    throw new HttpClientErrorException(response.getStatusCode());
-                })
-                .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
-                    log.error("Server error for ISBN: {} and status: {}", isbn, response.getStatusCode());
-                    throw new HttpServerErrorException(response.getStatusCode());
-                })
-                .body(BooksApiResponse.class);
     }
 
     public Optional<OpenLibraryDto> searchByIsbnFallback(String isbn, Exception e){

@@ -40,6 +40,9 @@
 </head>
 <body >
     <div class="wrapper">
+
+        <div id="flash" class="toast-stack" aria-live="polite"></div>
+
         <div sec:authorize="isAuthenticated() and hasRole('USER')"
                 th:replace="~{fragments/header :: userHeader}"></div>
 

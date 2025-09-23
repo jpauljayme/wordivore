@@ -20,50 +20,7 @@ public class ShelfReadService {
     private final WorkAuthorRepository workAuthorRepository;
 
 
-    @Cacheable(value = "shelf",
-            key = "T(String).format('%s:%s', #userId, T(dev.jp.wordivore.model.ShelfStatus).CURRENTLY_READING.name())",
-            sync = true
-    )
-    public List<LibraryItemDto> getUserLibraryCurrentReads(Long userId) {
-
-        List<LibraryItem> libraryItems = libraryItemRepository.findAllByAppUser_IdAndStatus(userId, ShelfStatus.CURRENTLY_READING);
-
-        //Get work authors. By batch!
-        var workIds = libraryItems.stream().map(li -> li.getEdition().getWork().id).collect(Collectors.toSet());
-
-        //Get edition contributors / translator. Do the same above.
-        Map<Long, List<String>> authorsByWork = workAuthorRepository.findRowsByWork_Id(workIds).stream()
-                .collect(Collectors.groupingBy(
-                        AuthorDto::workId,
-                        LinkedHashMap::new,
-                        Collectors.mapping(AuthorDto::name, Collectors.toList())
-                ));
-
-        return libraryItems.stream()
-                .map(li -> {
-
-                    var e = li.getEdition();
-                    var w = e.getWork();
-                    var subjects = w.getSubjects() == null ? List.<String>of() : w.getSubjects();
-                    var top4 = subjects.size() <= 4 ? subjects : subjects.subList(0, 4);
-
-                    return new LibraryItemDto(
-                            li.id,
-                            e.getTitle(),
-                            authorsByWork.getOrDefault(w.id, List.of()),
-                            top4,
-                            e.getCoverKey(),
-                            li.getStatus(),
-                            e.getPages(),
-                            e.getPublicationDate(),
-                            li.getReadStart(),
-                            li.getReadEnd()
-                    );
-                })
-                .toList();
-    }
-
-    @Cacheable(value = "shelfSections",
+    @Cacheable(value = "user:shelves",
             key = "#userId",
             sync = true
     )
@@ -71,7 +28,7 @@ public class ShelfReadService {
         List<LibraryItem> libraryItems = libraryItemRepository.findAllByAppUser_Id(userId);
 
 
-        //Get work authors. By batch!
+         //Get work authors. By batch!
         var workIds = libraryItems.stream().map(li -> li.getEdition().getWork().id).collect(Collectors.toSet());
 
 
@@ -129,5 +86,45 @@ public class ShelfReadService {
                         grouped.getOrDefault(ShelfStatus.DNF, new ArrayList<>())
                 )
         );
+    }
+
+
+    public List<LibraryItemDto> getUserLibraryByStatus(Long userId, ShelfStatus status) {
+
+        List<LibraryItem> libraryItems = libraryItemRepository.findAllByAppUser_IdAndStatus(userId, status);
+
+        //Get work authors. By batch!
+        var workIds = libraryItems.stream().map(li -> li.getEdition().getWork().id).collect(Collectors.toSet());
+
+        //Get edition contributors / translator. Do the same above.
+        Map<Long, List<String>> authorsByWork = workAuthorRepository.findRowsByWork_Id(workIds).stream()
+                .collect(Collectors.groupingBy(
+                        AuthorDto::workId,
+                        LinkedHashMap::new,
+                        Collectors.mapping(AuthorDto::name, Collectors.toList())
+                ));
+
+        return libraryItems.stream()
+                .map(li -> {
+
+                    var e = li.getEdition();
+                    var w = e.getWork();
+                    var subjects = w.getSubjects() == null ? List.<String>of() : w.getSubjects();
+                    var top4 = subjects.size() <= 4 ? subjects : subjects.subList(0, 4);
+
+                    return new LibraryItemDto(
+                            li.id,
+                            e.getTitle(),
+                            authorsByWork.getOrDefault(w.id, List.of()),
+                            top4,
+                            e.getCoverKey(),
+                            li.getStatus(),
+                            e.getPages(),
+                            e.getPublicationDate(),
+                            li.getReadStart(),
+                            li.getReadEnd()
+                    );
+                })
+                .toList();
     }
 }
