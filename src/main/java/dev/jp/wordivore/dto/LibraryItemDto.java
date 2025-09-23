@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public record LibraryItemDto(
-    Long itemId,
+    Long id,
     String title,
     List<String> authors,
     List<String> subjectsTop4,

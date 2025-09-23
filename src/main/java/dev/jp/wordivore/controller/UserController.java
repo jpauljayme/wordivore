@@ -44,7 +44,7 @@ public class UserController {
         model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
 
 
-        WordOfTheDayResponse wordOfTheDay = wordnikService.getWordOfTheDay(LocalDate.now());
+        WordOfTheDayResponse wordOfTheDay = wordnikService.getWordOfTheDayFallback(LocalDate.now());
         if(wordOfTheDay == null){
             WordOfTheDayResponse emptyWotd = new WordOfTheDayResponse("Hello",
                 "Wordnik API is currently down.",

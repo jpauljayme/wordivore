@@ -18,7 +18,7 @@ public class WordnikController {
 
     @GetMapping("/wotd")
     public String getWordOfTheDay(Model model){
-        wordnikService.getWordOfTheDay(LocalDate.now());
+        wordnikService.getWordOfTheDayFallback(LocalDate.now());
         return "fragments/wordink :: wordOfTheDay";
     }
 }

@@ -17,8 +17,7 @@ public class CacheConfig {
     public CacheManager cacheManager() {
 
         var cm = new CaffeineCacheManager(
-                "shelf",
-                "shelfSections",
+                "user:shelves",
                 "ol:isbn",
                 "wordnik:wotd"
         );
@@ -30,6 +29,5 @@ public class CacheConfig {
         );
 
         return cm;
-
     }
 }

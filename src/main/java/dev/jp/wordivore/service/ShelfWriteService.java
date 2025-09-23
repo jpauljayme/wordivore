@@ -1,11 +1,15 @@
 package dev.jp.wordivore.service;
 
+import dev.jp.wordivore.dto.AuthorDto;
+import dev.jp.wordivore.dto.LibraryItemDto;
 import dev.jp.wordivore.dto.OpenLibraryDto;
 import dev.jp.wordivore.dto.WorkResponseDto;
+import dev.jp.wordivore.exception.LibraryItemNotFoundException;
 import dev.jp.wordivore.exception.OpenLibraryWorkNotFoundException;
 import dev.jp.wordivore.model.*;
 import dev.jp.wordivore.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -28,12 +32,14 @@ public class ShelfWriteService {
     private final PersonRepository personRepository;
     private final OpenLibraryService openLibraryService;
 
+    private final CacheManager cacheManager;
+
     @Caching(evict = {
         //Evict the user's TO_READ shelf list (you add a TO_READ item)
-        @CacheEvict(cacheNames = "shelf",
+        @CacheEvict(cacheNames = "user:shelves",
             key = "T(String).format('%s:%s', #userId, T(dev.jp.wordivore.model.ShelfStatus).TO_READ.name())"),
         //Evict the user's prebuilt sections
-        @CacheEvict(cacheNames = "shelfSections", key = "#userId")
+        @CacheEvict(cacheNames = "user:shelves", key = "#userId")
     })
     public void insertBook(OpenLibraryDto openLibraryDto, String isbn, Long userId) throws OpenLibraryWorkNotFoundException {
 
@@ -126,4 +132,44 @@ public class ShelfWriteService {
 
         libraryItemRepository.save(newLibraryItem);
     }
+
+    @CacheEvict(value = "user:shelves", key = "#userId")
+    public LibraryItemDto updateShelfStatus(Long userId, Long id, ShelfStatus newStatus) throws LibraryItemNotFoundException {
+
+        LibraryItem libraryItem = libraryItemRepository.findById(id)
+                .orElseThrow(LibraryItemNotFoundException::new);
+
+
+        libraryItem.setStatus(newStatus);
+        libraryItemRepository.save(libraryItem);
+
+       LibraryItem updated = libraryItemRepository.findWithEditionAndWorkById(id).get();
+
+
+        var e = updated.getEdition();
+        var w = e.getWork();
+        var subjects = w.getSubjects() == null ? List.<String>of() : w.getSubjects();
+        var top4 = subjects.size() <= 4 ? subjects : subjects.subList(0, 4);
+
+        List<String> authors = workAuthorRepository
+            .findAllByWork_Id(w.id)
+            .stream()
+            .map( AuthorDto::name)
+            .toList();
+
+
+        return new LibraryItemDto(
+            updated.id,
+            updated.getEdition().getTitle(),
+            authors,
+            top4,
+            e.getCoverKey(),
+            updated.getStatus(),
+            e.getPages(),
+            e.getPublicationDate(),
+            updated.getReadStart(),
+            updated.getReadEnd()
+        );
+    }
+
 }

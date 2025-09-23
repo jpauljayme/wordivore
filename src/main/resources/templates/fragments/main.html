@@ -1,3 +1,4 @@
+
 <main th:fragment="userLandingMain" id="main" xmlns:th="http://www.w3.org/1999/xhtml">
   <div id="userLibraryLanding" class="library-page">
       <section class="library__section library__section--current">
@@ -21,11 +22,20 @@
     <section class="library__section library__section--to--read">
         <header class="section__header">
             <span class="section__title"
-                      th:text="${ 'To Read: ' + libraryToReadCount}">
+                  th:text="${ 'To Read: ' + libraryToReadCount}">
             </span>
         </header>
 
-        <div th:replace="~{fragments/main :: shelfView(books=${libraryToRead})}"></div>
+        <div id="to-read-list"
+            th:replace="~{fragments/main :: shelfView(books=${libraryToRead})}"></div>
+            <button class=""
+                    th:attr="hx-get=@{/books/to-read}"
+                    hx-push-url="true"
+                    hx-target="main"
+                    hx-swap="outerHTML"
+            >
+                View all
+            </button>
     </section>
   </div>
 </main>
@@ -46,44 +56,7 @@
      th:fragment="list(books)"
      class="shelf shelf--list"
 >
-
-    <article class="shelf__item shelf__item--detailed">
-        <div class="shelf__media">
-            <img th:src="${ prefix + b.coverKey}" class="img--work" alt="book cover">
-        </div>
-        <div class="shelf__meta">
-            <h3 class="shelf__title--h3">
-                <span class="shelf__title" th:text="${ b.title }"></span>
-                <span class="shelf__edition" th:text="${ b.editionName}"></span>
-            </h3>
-            <div class="shelf__authors">
-                <span class="shelf__author" th:each="author : ${b.authors}" th:text="${author}" ></span>
-            </div>
-
-            <div>
-                <span class="shelf__publicationDate" th:text="${ b.publicationDate }"></span>
-                <span class="shelf__page" th:text="${ b.pages + ' pages'}"></span>
-            </div>
-
-            <ul class="shelf__subjects">
-                <li class="shelf__subject text-xs" th:each="subject, stat : ${b.subjectsTop4}">
-                    <span th:text="${subject}"></span>
-                </li>
-            </ul>
-
-            <div>
-                <select id="status-select">
-                    <option th:each="status : ${shelfStatusValues}"
-                            th:value="${status}"
-                            th:text="${status.getStatus()}"
-                            th:selected="${status == b.status}"
-                    >
-                    </option>
-                </select>
-            </div>
-
-        </div>
-    </article>
+    <article th:replace="~{fragments/edition :: shelfItem(b=${b})}"></article>
 </div>
 
 
@@ -99,3 +72,14 @@
     >
     </div>
 </main>
+
+
+<main th:fragment="libraryToReadAll" class="reads-page">
+    <header class="reads-page__header">
+        <span class="section__title" th:if="${libraryToReadCount} > 1" th:text="${libraryToReadCount + ' books'}"></span>
+    </header>
+
+    <div th:replace="~{fragments/main :: list(books=${libraryToRead})}">
+    </div>
+</main>
+
