@@ -25,6 +25,6 @@ public abstract class PersistedEntity implements Serializable {
 
     @Column(name ="updated_at")
     @LastModifiedDate
-    private Instant modifiedAt;
+    private Instant updatedAt;
 
 }

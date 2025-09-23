@@ -2,13 +2,16 @@ package dev.jp.wordivore.dto;
 
 import java.util.List;
 
-public record BookDto(
+public record OpenLibraryDto(
         List<String> authors,
-        int publicationDate,
+        Integer publicationDate,
+        List<String> publishers,
         String title,
-        List<String> subjects,
         int pages,
         String isbn10,
+        String isbn13,
+        String key,
+        String coverKey,
         String coverUrl
 ) {
 }

@@ -1,43 +1,88 @@
-<main th:fragment="userLandingMain" id="main">
-  <div>
-    <span th:text="${'@' + username}"></span>
-  </div>
 
-  <div id="userLibraryLanding">
-    <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
-    <div th:replace="~{fragments/main :: list(books=${books})}">
+<main th:fragment="userLandingMain" id="main" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="userLibraryLanding" class="library-page">
+        <section class="library__section library__section--current">
+            <div class="section__header">
+                <span class="section__title" th:text="${'Current Reads ' + '(' + libraryCurrentReadsCount + ')'}">Currently Reading (0)</span>
+            </div>
+
+            <p th:if="${#lists.isEmpty(libraryCurrentReads)}">Nothing here yet.</p>
+            <div th:replace="~{fragments/main :: shelfView(books=${libraryCurrentReads})}">
+            </div>
+            <button class=""
+                    th:attr="hx-get=@{/books/currently-reading}"
+                    hx-push-url="true"
+                    hx-target="main"
+                    hx-swap="outerHTML"
+            >
+                View all
+            </button>
+        </section>
+
+        <section class="library__section library__section--to--read">
+            <header class="section__header">
+            <span class="section__title"
+                  th:text="${ 'To Read: ' + libraryToReadCount}">
+            </span>
+            </header>
+
+            <div id="to-read-list"
+                 th:replace="~{fragments/main :: shelfView(books=${libraryToRead})}"></div>
+            <button class=""
+                    th:attr="hx-get=@{/books/to-read}"
+                    hx-push-url="true"
+                    hx-target="main"
+                    hx-swap="outerHTML"
+            >
+                View all
+            </button>
+        </section>
     </div>
-  </div>
-
-    <button th:attr="hx-get=@{/books/all}"
-            hx-push-url="true"
-            hx-target="main"
-            hx-swap="outerHTML"
-    >
-        View all
-    </button>
 </main>
-
 
 <div th:if="${not #lists.isEmpty(books)}"
      th:each="b : ${books}"
-     th:fragment="list(books)">
+     th:fragment="shelfView(books)"
+     class="shelf"
+>
+    <article class="shelf__item"
+             hx-trigger="click"
+             th:hx-get="@{/books/{id}(id=${b.id})}"
+             hx-target="#userLibraryLanding"
+             hx-swap="outerHTML"
+    >
+        <img th:src="${ prefix + b.coverKey}" class="shelf__cover" alt="book cover">
+    </article>
+</div>
 
-    <a href="#">
-        <img th:src="${prefix + b.isbn10 + '-M.jpg'}" class="img--book">
-    </a>
+<div th:if="${not #lists.isEmpty(books)}"
+     th:each="b : ${books}"
+     th:fragment="list(books)"
+     class="shelf shelf--list"
+>
+    <article th:replace="~{fragments/edition :: shelfItem(b=${b})}"></article>
 </div>
 
 
 
-<main th:fragment="viewAll" id="viewAll">
-    <div>
-        <span th:text="${'@' + username}"></span>
+<main th:fragment="currentReads" id="viewAll" class="reads-page">
+    <header class="reads-page__header">
+        <span class="section__title">Current reads</span>
+        <span class="section__title" th:if="${libraryCurrentReadsCount} > 1" th:text="${libraryCurrentReadsCount + ' books'}"></span>
+        <span class="section__title" th:if="${libraryCurrentReadsCount == 1}" th:text="${libraryCurrentReadsCount + ' book'}"></span>
+    </header>
+    <div id="userLibraryViewAll"
+         th:replace="~{fragments/main :: list(books=${libraryCurrentReads})}"
+    >
     </div>
+</main>
 
-    <div id="userLibraryViewAll">
-        <p th:if="${#lists.isEmpty(books)}">Nothing here yet.</p>
-        <div th:replace="~{fragments/main :: list(books=${books})}">
-        </div>
+
+<main th:fragment="libraryToReadAll" class="reads-page">
+    <header class="reads-page__header">
+        <span class="section__title" th:if="${libraryToReadCount} > 1" th:text="${libraryToReadCount + ' books'}"></span>
+    </header>
+
+    <div th:replace="~{fragments/main :: list(books=${libraryToRead})}">
     </div>
 </main>

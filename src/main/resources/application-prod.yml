@@ -1,0 +1,38 @@
+resilience4j:
+  ratelimiter:
+    instances:
+      openlibrary-rate-limiter:
+        limit-for-period: 1
+        limit-refresh-period: 2s
+        timeout-duration: 5s
+        register-health-indicator: true
+        allow-health-indicator-to-fail: true
+  retry:
+    instances:
+      openlibrary-retry:
+        max-attempts: 3
+        wait-duration: 2s
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - org.springframework.web.client.HttpClientErrorException$TooManyRequests
+          - java.net.ConnectException
+          - java.net.SocketTimeoutException
+        ignore-exceptions:
+          - java.lang.IllegalArgumentException
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, resilience4j
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+    rateLimiters:
+      enabled: true
+    retries:
+      enabled: true

@@ -1,0 +1,47 @@
+<article
+        th:fragment="shelfItem(b)"
+        class="shelf__item shelf__item--detailed"
+>
+  <div class="shelf__media">
+    <img th:src="${ prefix + b.coverKey}" class="img--work" alt="book cover">
+  </div>
+  <div class="shelf__meta">
+    <h3 class="shelf__title--h3">
+      <span class="shelf__title" th:text="${ b.title }"></span>
+    </h3>
+    <div class="shelf__authors">
+      <span class="shelf__author" th:each="author : ${b.authors}" th:text="${author}" ></span>
+    </div>
+
+    <div>
+      <span class="shelf__publicationDate" th:text="${ b.publicationDate }"></span>
+      <span class="shelf__page" th:text="${ b.pages + ' pages'}"></span>
+    </div>
+
+    <ul class="shelf__subjects">
+      <li class="shelf__subject text-xs" th:each="subject, stat : ${b.subjectsTop4}">
+        <span th:text="${subject}"></span>
+      </li>
+    </ul>
+
+    <div>
+      <select
+              name="status"
+              hx-trigger="change"
+              th:attr="hx-post=@{/books/{id}/status(id=${b.id})}"
+              hx-target='closest article'
+              hx-swap='outerHTML'
+              th:attrappend="hx-indicator=| #saving-${b.id} |"
+              hx-include="[name='status']"
+      >
+        <option th:each="status : ${shelfStatusValues}"
+                th:value="${status}"
+                th:text="${status.getStatus()}"
+                th:selected="${status == b.status}"
+        >
+        </option>
+      </select>
+      <span th:id="|saving-${b.id}|" class="htmx-indicator">Saving...</span>
+    </div>
+  </div>
+</article>

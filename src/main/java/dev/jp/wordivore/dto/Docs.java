@@ -6,6 +6,12 @@ import java.util.List;
 
 public record Docs(
         @JsonProperty("author_name") List<String> authors,
-        @JsonProperty("first_publish_year")int publicationDate,
-        @JsonProperty("title")String title
+        @JsonProperty("contributor") List<String> contributors,
+        @JsonProperty("first_sentence") List<String> firstSentence,
+        @JsonProperty("first_publish_year") Integer firstPublishedYear,
+        @JsonProperty("number_of_pages_median") Integer pages,
+
+        String title,
+        String key,
+        @JsonProperty("editions") EditionsResponse editionInfo
         ){}

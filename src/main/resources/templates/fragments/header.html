@@ -27,21 +27,21 @@
     </a>
 </header>
 
-<header th:fragment="authenticatedHeader" class="authenticatedHeader">
+<header th:fragment="userHeader" class="userHeader">
   <div class="authenticatedHeader--img-wrapper">
     <a href="/user">
-      <img class="authenticatedHeader--img-wrapper__img"
+      <img class="userHeader__img"
            th:src="@{/images/wordivore.png}"
       >
     </a>
   </div>
 
-  <form class="authenticatedHeader--form"
+  <form class="userHeader__form"
         th:action="@{/books/isbn}"
         method="post"
         th:attr="hx-post=@{/books/isbn}"
-        hx-swap="innerHTML"
-        hx-target="#userLibraryLanding"
+        hx-swap="outerHTML"
+        hx-target="main"
   >
 
     <input type="hidden"
@@ -53,20 +53,44 @@
              placeholder="Input isbn"
              name="isbn"
              id="searchIsbn"
-             class="authenticatedHeader--form__inputIsbn"
+             class="userHeader__form--inputIsbn"
     />
 
     <input type="submit" hidden>
   </form>
 
-  <div class="authenticatedHeader--logout">
+  <div class="userHeader_logout">
     <button sec:authorize="isAuthenticated()"
             hx-post="/logout"
             hx-target=".wrapper"
             hx-swap="outerHTML"
             hx-push-url="/"
-            class="authenticatedHeader--logout__btn"
+            class="userHeader__logout--btn"
     >Sign out
     </button>
   </div>
+</header>
+
+<header
+  th:fragment="adminHeader"
+  class="adminHeader__header"
+
+>
+  <div class="adminHeader__icon__">
+    <a href="/admin">
+      <img class="userHeader__img"
+           th:src="@{/images/wordivore.png}"
+      >
+    </a>
+  </div>
+    <div class="adminHeader__logout">
+      <button sec:authorize="isAuthenticated()"
+              hx-post="/logout"
+              hx-target=".wrapper"
+              hx-swap="outerHTML"
+              hx-push-url="/"
+              class="adminHeader__logout--btn"
+      >Sign out
+      </button>
+    </div>
 </header>

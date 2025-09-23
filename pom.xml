@@ -12,7 +12,7 @@
 	<artifactId>wordivore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>wordivore</name>
-	<description>Ticking of the time, words march onwards, and I am the bell</description>
+	<description>Reading is still fundamental.</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -127,6 +127,55 @@
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>apache-client</artifactId>
 			<version>${aws.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>io.hypersistence</groupId>
+			<artifactId>hypersistence-utils-hibernate-63</artifactId>
+			<version>3.10.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+			<version>3.1.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.ben-manes.caffeine</groupId>
+			<artifactId>caffeine</artifactId>
+			<version>3.2.2</version>
+		</dependency>
+
+		<dependency>
+			<artifactId>bootstrap</artifactId>
+			<groupId>org.webjars</groupId>
+			<version>5.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.webjars.npm</groupId>
+			<artifactId>bootstrap-icons</artifactId>
+			<version>1.11.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-spring-boot3 -->
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-spring-boot3</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.resilience4j</groupId>
+			<artifactId>resilience4j-micrometer</artifactId>
+			<version>2.3.0</version>
 		</dependency>
 
 	</dependencies>
