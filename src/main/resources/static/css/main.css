@@ -1,3 +1,7 @@
+#main{
+    grid-area: main;
+}
+
 .library-page {
     display: grid;
     gap: 20px;

@@ -19,6 +19,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,11 +42,11 @@ public class BookController {
     public String SearchBookByIsbn(Model model,
                                    @RequestParam String isbn,
                                    @AuthenticationPrincipal SecurityUser securityUser
-    ) throws BookNotFoundException, OpenLibraryWorkNotFoundException, InterruptedException , IOException {
+    ) throws BookNotFoundException, OpenLibraryWorkNotFoundException, InterruptedException, IOException {
         OpenLibraryDto bookDto = openLibraryService.searchByIsbn(isbn).
-            orElseGet(() -> null);
+                orElseGet(() -> null);
 
-        if(Objects.nonNull(bookDto)){
+        if (Objects.nonNull(bookDto)) {
             shelfWriteService.insertBook(bookDto, isbn, securityUser.getUserId());
         }
 
@@ -55,7 +57,7 @@ public class BookController {
         model.addAttribute("libraryToReadCount", libraryToRead.size());
 
         List<LibraryItemDto> libraryCurrentReads = library.get(1).books();
-        model.addAttribute("libraryCurrentReads", libraryCurrentReads );
+        model.addAttribute("libraryCurrentReads", libraryCurrentReads);
         model.addAttribute("libraryCurrentReadsCount", libraryCurrentReads.size());
 
         model.addAttribute("prefix", prefix);
@@ -64,7 +66,7 @@ public class BookController {
     }
 
     @GetMapping("/currently-reading")
-    public String viewCurrentReads(Model model, @AuthenticationPrincipal SecurityUser securityUser){
+    public String viewCurrentReads(Model model, @AuthenticationPrincipal SecurityUser securityUser) {
 
 
         model.addAttribute("appUser", securityUser.getAppUser());
@@ -80,7 +82,7 @@ public class BookController {
     }
 
     @GetMapping("/to-read")
-    public String viewToRead(Model model, @AuthenticationPrincipal SecurityUser securityUser){
+    public String viewToRead(Model model, @AuthenticationPrincipal SecurityUser securityUser) {
 
 
         model.addAttribute("appUser", securityUser.getAppUser());
@@ -97,12 +99,36 @@ public class BookController {
 
     @PostMapping("/{id}/status")
     public String updateShelfStatus(Model model,
-        @RequestParam ShelfStatus status,
-        @PathVariable Long id,
-        @AuthenticationPrincipal SecurityUser securityUser
-        ) throws LibraryItemNotFoundException {
+                                    @RequestParam ShelfStatus status,
+                                    @PathVariable Long id,
+                                    @AuthenticationPrincipal SecurityUser securityUser
+    ) throws LibraryItemNotFoundException {
 
         LibraryItemDto libraryItemDto = shelfWriteService.updateShelfStatus(securityUser.getUserId(), id, status);
+
+        model.addAttribute("b", libraryItemDto);
+        model.addAttribute("prefix", prefix);
+        model.addAttribute("shelfStatusValues", ShelfStatus.values());
+
+        return "fragments/edition :: shelfItem";
+    }
+
+    @GetMapping("/{id}")
+    public String viewBook(Model model,
+                           @PathVariable Long id
+    ) throws BookNotFoundException {
+
+        LibraryItemDto libraryItemDto = shelfReadService.getBookById(id).orElseGet( () -> new LibraryItemDto(0L,
+                "",
+                Collections.emptyList(),
+                Collections.emptyList(),
+                "",
+                ShelfStatus.DNF,
+                0,
+                0,
+                LocalDate.now(),
+                LocalDate.now()
+        ));
 
         model.addAttribute("b", libraryItemDto);
         model.addAttribute("prefix", prefix);
