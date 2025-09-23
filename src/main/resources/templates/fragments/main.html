@@ -45,8 +45,12 @@
      th:fragment="shelfView(books)"
      class="shelf"
 >
-
-    <article class="shelf__item">
+    <article class="shelf__item"
+             hx-trigger="click"
+             th:hx-get="@{/books/{id}(id=${b.id})}"
+             hx-target="#userLibraryLanding"
+             hx-swap="outerHTML"
+    >
         <img th:src="${ prefix + b.coverKey}" class="shelf__cover" alt="book cover">
     </article>
 </div>

@@ -2,6 +2,7 @@ package dev.jp.wordivore.service;
 
 import dev.jp.wordivore.dto.AuthorDto;
 import dev.jp.wordivore.dto.LibraryItemDto;
+import dev.jp.wordivore.exception.BookNotFoundException;
 import dev.jp.wordivore.model.*;
 import dev.jp.wordivore.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -126,5 +127,38 @@ public class ShelfReadService {
                     );
                 })
                 .toList();
+                })
+                .toList();
+    }
+
+    public Optional<LibraryItemDto> getBookById(Long id) throws BookNotFoundException {
+        LibraryItem li = libraryItemRepository.findWithEditionAndWorkById(id)
+                .orElseThrow(BookNotFoundException::new);
+
+        Edition e = li.getEdition();
+        Work work = e.getWork();
+
+
+        //Get edition contributors / translator. Do the same above.
+       List<String> authors = workAuthorRepository.findAllByWork_Id(work.id).stream()
+               .map(AuthorDto::name)
+               .toList();
+
+       var subjects = work.getSubjects() == null ? List.<String>of() : work.getSubjects();
+       var top4 = subjects.size() <= 4 ? subjects : subjects.subList(0, 4);
+
+       return Optional.of(
+            new LibraryItemDto(
+               li.id,
+               e.getTitle(),
+               authors,
+               top4,
+               e.getCoverKey(),
+               li.getStatus(),
+               e.getPages(),
+               e.getPublicationDate(),
+               li.getReadStart(),
+               li.getReadEnd()
+       ));
     }
 }
