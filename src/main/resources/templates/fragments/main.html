@@ -9,7 +9,7 @@
             <p th:if="${#lists.isEmpty(libraryCurrentReads)}">Nothing here yet.</p>
             <div th:replace="~{fragments/main :: shelfView(books=${libraryCurrentReads})}">
             </div>
-            <button class=""
+            <button class="shelf__btn"
                     th:attr="hx-get=@{/books/currently-reading}"
                     hx-push-url="true"
                     hx-target="main"
@@ -28,7 +28,7 @@
 
             <div id="to-read-list"
                  th:replace="~{fragments/main :: shelfView(books=${libraryToRead})}"></div>
-            <button class=""
+            <button class="shelf__btn"
                     th:attr="hx-get=@{/books/to-read}"
                     hx-push-url="true"
                     hx-target="main"
@@ -41,11 +41,11 @@
 </main>
 
 <div th:if="${not #lists.isEmpty(books)}"
-     th:each="b : ${books}"
      th:fragment="shelfView(books)"
      class="shelf"
 >
     <article class="shelf__item"
+             th:each="b : ${books}"
              hx-trigger="click"
              th:hx-get="@{/books/{id}(id=${b.id})}"
              hx-target="#userLibraryLanding"

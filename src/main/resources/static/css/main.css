@@ -10,12 +10,18 @@
 
 .reads-page{
     display: grid;
+    grid-area: main;
     gap: 20px;
     grid-template-rows: min-content 1fr;
 }
 
 .reads-page__header{
     display: grid;
+}
+
+.shelf{
+    display: grid;
+    gap: 30px;
 }
 
 .shelf__item--detailed{
@@ -46,4 +52,8 @@
 .library__section--current{
     border-bottom: 1px solid rgb(177, 43, 36);
     padding-bottom: 10px
+}
+
+.shelf__btn{
+    margin-top: 20px;
 }

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS work (
     key TEXT,
     description TEXT,
     first_sentence TEXT,
-    subjects TEXT[] DEFAULT '{}'::TEXT[],
+    subjects TEXT,
     ave_rating NUMERIC (2,1),
     ratings_count BIGINT DEFAULT 0,
     reviews_count BIGINT DEFAULT 0,

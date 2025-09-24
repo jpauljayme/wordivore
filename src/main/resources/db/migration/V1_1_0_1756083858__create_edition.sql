@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS edition (
     authors TEXT[] DEFAULT '{}'::TEXT[],
     by_statement TEXT,
     publication_date INTEGER NOT NULL,
-    publishers TEXT[] DEFAULT '{}'::TEXT[],
+    publishers TEXT,
     title VARCHAR(200) NOT NULL,
     pages INTEGER DEFAULT 0,
     isbn_10 VARCHAR(10) DEFAULT '',

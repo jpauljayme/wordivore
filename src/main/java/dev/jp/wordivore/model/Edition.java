@@ -1,27 +1,24 @@
 package dev.jp.wordivore.model;
 
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Type;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity(name = "edition")
 @Table(name = "edition",
-    uniqueConstraints = {
-        @UniqueConstraint(name = "uk_edition_isbn10", columnNames = "isbn_10"),
-        @UniqueConstraint(name = "uk_edition_isbn13", columnNames = "isbn_13")
-    }
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_edition_isbn10", columnNames = "isbn_10"),
+                @UniqueConstraint(name = "uk_edition_isbn13", columnNames = "isbn_13")
+        }
 )
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Edition extends PersistedEntity{
+public class Edition extends PersistedEntity {
 
     @Column(name = "by_statement")
     private String byStatement;
@@ -30,12 +27,12 @@ public class Edition extends PersistedEntity{
     private String title;
 
     @Column(name = "isbn_10",
-    length = 10
+            length = 10
     )
     private String isbn10;
 
     @Column(name = "isbn_13",
-        length = 13
+            length = 13
     )
     private String isbn13;
 
@@ -45,8 +42,8 @@ public class Edition extends PersistedEntity{
     @Column(name = "cover_key")
     private String coverKey;
 
-    @Type(ListArrayType.class)
-    @Column(name = "publishers")
+    @Convert(converter = StringArrayConverter.class)
+    @Column(name = "publishers", columnDefinition = "text[]")
     private List<String> publishers;
 
     @Column(name = "publication_date")
@@ -55,13 +52,14 @@ public class Edition extends PersistedEntity{
     @Column(name = "pages")
     private Integer pages;
 
-   @ManyToOne(fetch = FetchType.LAZY,
-   optional = false)
-   @JoinColumn(name = "work_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY,
+            optional = false)
+    @JoinColumn(name = "work_id", nullable = false)
     private Work work;
 
-   @Version
-   @Column(nullable = false)
+    @Version
+    @Column(nullable = false)
     private Long version;
 
 }
+

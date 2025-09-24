@@ -1,15 +1,9 @@
 package dev.jp.wordivore.model;
 
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
-import io.hypersistence.utils.hibernate.type.json.JsonType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -27,10 +21,8 @@ public class Work extends PersistedEntity {
     @Column(name = "key")
     private String key;
 
-    @Type(ListArrayType.class)
-    @Column(name = "subjects",
-            columnDefinition = "text[]",
-            nullable = false)
+    @Convert(converter = StringArrayConverter.class)
+    @Column(name = "subjects", columnDefinition = "text[]")
     private List<String> subjects;
 
     @Column

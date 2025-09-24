@@ -32,6 +32,7 @@
 		<mapstruct.version>1.6.2</mapstruct.version>
 		<lombok.version>1.18.34</lombok.version>
 		<aws.version>2.32.25</aws.version>
+		<postgresql.version>42.7.3</postgresql.version>
 	</properties>
 	<dependencies>
 			<dependency>
@@ -71,6 +72,7 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
@@ -108,13 +110,6 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.mapstruct/mapstruct -->
-		<dependency>
-			<groupId>org.mapstruct</groupId>
-			<artifactId>mapstruct</artifactId>
-			<version>${mapstruct.version}</version>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/software.amazon.awssdk/s3 -->
 		<dependency>
 			<groupId>software.amazon.awssdk</groupId>
@@ -127,13 +122,6 @@
 			<groupId>software.amazon.awssdk</groupId>
 			<artifactId>apache-client</artifactId>
 			<version>${aws.version}</version>
-		</dependency>
-
-
-		<dependency>
-			<groupId>io.hypersistence</groupId>
-			<artifactId>hypersistence-utils-hibernate-63</artifactId>
-			<version>3.10.1</version>
 		</dependency>
 
 		<dependency>
